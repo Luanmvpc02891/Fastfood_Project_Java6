@@ -32,6 +32,9 @@
     <!-- responsive -->
     <link rel="stylesheet" th:href="@{/assets/css/responsive.css}">
 	<script th:src="@{https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js}"></script>
+
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 </head>
 <body ng-app="shopping-cart-app" ng-controller="shopping-cart-ctrl">
 	
@@ -90,7 +93,7 @@
 						<table class="cart-table">
 							<thead class="cart-table-head">
 								<tr class="table-head-row">
-									<th><input type="checkbox" ng-model="selectAll" ng-change="cart.selectAllItems(selectAll)" id="checkAll"></th>
+									<th><input type="checkbox" ng-model="cart.selectAll" ng-click="selectAllItems()" id="checkAll"></th>
 									<th class="product-image">Product Image</th>
 									<th class="product-name">Name</th>
 									<th class="product-price">Price</th>
@@ -102,17 +105,17 @@
 							<tbody>
 								<tr class="table-body-row" ng-repeat="item in cart.items">
 									<td class="product-total"><input type="checkbox" ng-model="item.selected" class="checkbox"></td>
-									<td class="product-image"><img alt="Product Image"></td>
+									<td class="product-image"> <img src="/uploads/{{item.item.image.substring(11)}}" alt="Product Image"></td>
 									<td class="product-name">{{item.item.name}}</td>
-									<td class="product-price">{{item.item.price| number: 0}}</td>
-									<td class="product-quantity"><input ng-change=""  ng-model="item.quantity" type="number" min="1"></td>
-									<td class="product-total">{{item.quantity*item.item.price | number: 0}}</td>
-									<td class="product-remove"><button ng-click="cart.remove(item.itemId)"><i class="far fa-window-close"></i></button></td>
+									<td class="product-price">{{item.item.price| number: 0}} vnđ</td>
+									<td class="product-quantity"><input ng-change="updateCartItemQuantity(item)"  ng-model="item.quantity" type="number" min="1"></td>
+									<td class="product-total">{{item.quantity*item.item.price | number: 0}} vnđ</td>
+									<td class="product-remove"><button ng-click="cart.removeFromCart(item.item.itemId)"><i class="far fa-window-close"></i></button></td>
 								</tr>
 							</tbody>
 						</table>
-						<div class="cart-buttons">
-							<a class="boxed-btn" ng-click="cart.removeSelectedItems()">Xóa</a>
+						<div class="cart-buttons"style="float: right;">
+							<a class="boxed-btn" ng-click="removeSelectedItems()">Xóa</a>
 						</div>
 					</div>
 				</div>
@@ -128,15 +131,7 @@
 							<tbody>
 								<tr class="total-data">
 									<td><strong>Subtotal: </strong></td>
-									<td>{{ cart.calculateTotalPrice()| number: 0}} vnđ</td>
-								</tr>
-								<tr class="total-data">
-									<td><strong>Shipping: </strong></td>
-									<td>20.000 đ</td>
-								</tr>
-								<tr class="total-data">
-									<td><strong>Total: </strong></td>
-									<td>40.000 đ</td>
+									<td> {{ cart.totalAmount | number:0 }} vnđ</td>
 								</tr>
 							</tbody>
 						</table>

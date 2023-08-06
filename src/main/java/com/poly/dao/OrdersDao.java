@@ -7,6 +7,6 @@ import com.poly.entity.Account;
 import com.poly.entity.Order;
 
 public interface OrdersDao extends JpaRepository<Order, Integer> {
-    @Query("SELECT o FROM Order o WHERE o.account = :account AND o.totalPrice IS NULL")
-    Order findUncompletedOrder(Account account);
+
+    Order findFirstByAccountAndTotalPrice(Account account, double totalPrice);
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -71,7 +72,7 @@ public class ItemRestController {
 		}
 
 		// Tạo đơn hàng mới hoặc lấy đơn hàng chưa hoàn tất của người dùng
-		Order order = orderDao.findUncompletedOrder(account);
+		Order order = orderDao.findFirstByAccountAndTotalPrice(account, 0.0);
 		if (order == null) {
 			order = new Order();
 			order.setOrderDate(new Date());
@@ -81,29 +82,78 @@ public class ItemRestController {
 
 			order = orderDao.save(order);
 		}
+		// Đếm số lượng sản phẩm trong đơn hàng
+		int itemCount = orderItemDao.countByOrderAccountAndItem(account, item);
 
-		// Thêm sản phẩm vào đơn hàng
-		OrderItem orderItem = new OrderItem();
-		orderItem.setOrder(order);
-		orderItem.setItem(item);
-		orderItem.setQuantity(quantity); // Số lượng sản phẩm được chuyển từ Angular
-		// Thiết lập các thông tin khác cho chi tiết đơn hàng
-
-		orderItemDao.save(orderItem);
+		// Kiểm tra xem sản phẩm đã có trong đơn hàng chưa
+		OrderItem existingItem = orderItemDao.findByOrderAndItem(order, item);
+		if (existingItem != null) {
+			existingItem.setQuantity(existingItem.getQuantity() + 1);
+			orderItemDao.save(existingItem);
+		} else {
+			// Thêm sản phẩm vào đơn hàng
+			OrderItem orderItem = new OrderItem();
+			orderItem.setOrder(order);
+			orderItem.setItem(item);
+			orderItem.setQuantity(quantity); // Số lượng sản phẩm được chuyển từ Angular
+			// Thiết lập các thông tin khác cho chi tiết đơn hàng
+			orderItemDao.save(orderItem);
+		}
 		return ResponseEntity.ok("{\"message\": \"Item added to cart!\"}");
 	}
 
-	// @DeleteMapping("/remove-from-cart/{itemId}/{accountId}")
-	// public ResponseEntity<String> removeFromCart(
-	// @PathVariable Integer itemId,
-	// @PathVariable Integer accountId) {
-	// // Kiểm tra và xử lý xóa sản phẩm khỏi giỏ hàng
-	// try {
-	// orderService.removeCartItem(accountId, itemId);
-	// return ResponseEntity.ok("Product removed from cart successfully.");
-	// } catch (Exception e) {
-	// return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-	// .body("Error while removing product from cart: " + e.getMessage());
-	// }
-	// }
+	@DeleteMapping("/remove-from-cart/{itemId}/{accountId}")
+	public ResponseEntity<String> removeFromCart(@PathVariable("itemId") Integer itemId,
+			@PathVariable("accountId") Integer accountId) {
+
+		Item item = itemService.findById(itemId);
+		Account account = dao.findById(accountId).orElse(null);
+
+		if (item == null || account == null) {
+			return ResponseEntity.badRequest().body("Item or account not found!");
+		}
+
+		// Tìm giỏ hàng chưa hoàn tất của người dùng
+		Order order = orderDao.findFirstByAccountAndTotalPrice(account, 0.0);
+		if (order != null) {
+			// Xóa sản phẩm khỏi giỏ hàng
+			OrderItem orderItem = orderItemDao.findByOrderAndItem(order, item);
+			if (orderItem != null) {
+				orderItemDao.delete(orderItem);
+				return ResponseEntity.ok().body("{\"message\": \"Item removed from cart!\"}");
+
+			}
+		}
+
+		return ResponseEntity.ok().body("{\"message\": \"Item removed from cart!\"}");
+
+	}
+
+	@PutMapping("/update-quantity/{itemId}/{quantity}/{accountId}")
+	public ResponseEntity<String> updateCartItemQuantity(@PathVariable("itemId") Integer itemId,
+			@PathVariable("quantity") int quantity, @PathVariable("accountId") Integer accountId) {
+
+		Item item = itemService.findById(itemId);
+		Account account = dao.findById(accountId).orElse(null);
+		if (item == null) {
+			return ResponseEntity.badRequest().body("Item not found!");
+		}
+
+		// Tìm giỏ hàng chưa hoàn tất của người dùng
+
+		Order order = orderDao.findFirstByAccountAndTotalPrice(account, 0.0);
+		if (order != null) {
+			// Xác định chi tiết đơn hàng tương ứng với sản phẩm và cập nhật số lượng
+			OrderItem orderItem = orderItemDao.findByOrderAndItem(order, item);
+			if (orderItem != null) {
+				orderItem.setQuantity(quantity);
+				orderItemDao.save(orderItem);
+				return ResponseEntity.ok().body("{\"message\": \"Đã cập nhật số lượng!\"}");
+			}
+		}
+
+		return ResponseEntity.ok().body("{\"message\": \"Đã cập nhật số lượng!\"}");
+
+	}
+
 }
