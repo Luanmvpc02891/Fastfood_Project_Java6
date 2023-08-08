@@ -1,78 +1,91 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <!-- header -->
-	<div class="top-header-area" id="sticker">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-12 col-sm-12 text-center">
-					<div class="main-menu-wrap">
-						<!-- logo -->
-						<div class="site-logo">
-							<a th:href="@{/index}">
-								<img src="assets/img/logo.png" alt="">
-							</a>
-						</div>
-						<!-- logo -->
+<style>
+	#keyword {
+		background-color: transparent;
+	}
 
-						<!-- menu start -->
-						<nav class="main-menu">
-							<ul>
-								<li class="current-list-item"><a href="#">Home</a>
-									<ul class="sub-menu">
-										<li><a th:href="@{/index}">Static Home</a></li>
-										<li><a th:href="@{/index_2}">Slider Home</a></li>
-									</ul>
-								</li>
-								<li>
-									<a th:href="@{/index}">Menu</a>
-									<ul class="sub-menu">
-										<!-- Lặp qua danh sách các mục (cates) và tạo các phần tử <li> chứa tên của từng mục -->
-										<li th:each="cate : ${cates}">
-											<a th:href="@{/index(cateId=${cate.categoryId})}" th:text="${cate.name}"></a>
-										</li>
-									</ul>
-								</li>
-								
-								<li><a href="#">Pages</a>
-									<ul class="sub-menu">
-										<li><a th:href="@{/404}">404 page</a></li>
-										<li><a th:href="@{/about}">About</a></li>
-										<li><a th:href="@{/cart}">Cart</a></li>
-										<li><a th:href="@{/checkout}">Check Out</a></li>
-										<li><a th:href="@{/contact}">Contact</a></li>
-										<li><a th:href="@{/news}">News</a></li>
-										<li><a th:href="@{/shop}">Shop</a></li>
-									</ul>
-								</li>
-								<li><a th:href="@{/news}">News</a>
-									<ul class="sub-menu">
-										<li><a th:href="@{/news}">News</a></li>
-										<li><a th:href="@{/single-news}">Single News</a></li>
-									</ul>
-								</li>
-								<li><a th:href="@{/contact}">Contact</a></li>
-								<li><a th:href="@{/shop}">Shop</a>
-									<ul class="sub-menu">
-										<li><a th:href="@{/shop}">Shop</a></li>
-										<li><a th:href="@{/checkout}">Check Out</a></li>
-										<li><a th:href="@{/single-product}">Single Product</a></li>
-										<li><a href="@{/cart}">Cart</a></li>
-									</ul>
-								</li>
-								<li>
-									<div class="header-icons" >
-										<a class="shopping-cart" th:href="@{/cart}"><i class="fas fa-shopping-cart"> {{ cart.itemCount }}</i></a>
-										<a class="mobile-hide search-bar-icon" href="#"><i class="fas fa-search"></i></a>
-									</div>
-								</li>
-							</ul>
-						</nav>
-						<a class="mobile-show search-bar-icon" href="#"><i class="fas fa-search"></i></a>
-						<div class="mobile-menu"></div>
-						<!-- menu end -->
+	/* Các thuộc tính CSS khác của input */
+</style>
+<div class="top-header-area" id="sticker">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12 col-sm-12 text-center">
+				<div class="main-menu-wrap">
+					<!-- logo -->
+					<div class="site-logo">
+						<a th:href="@{/index}">
+							<img src="assets/img/logo.png" alt="">
+						</a>
 					</div>
+					<!-- logo -->
+
+					<!-- menu start -->
+					<nav class="main-menu">
+						<ul>
+							<li class="current-list-item"><a href="#">Home</a>
+								<ul class="sub-menu">
+									<li><a th:href="@{/index}">Static Home</a></li>
+									<li><a th:href="@{/index_2}">Slider Home</a></li>
+								</ul>
+							</li>
+							<li>
+								<a th:href="@{/index}">Menu</a>
+								<ul class="sub-menu">
+									<!-- Lặp qua danh sách các mục (cates) và tạo các phần tử <li> chứa tên của từng mục -->
+									<li th:each="cate : ${cates}">
+										<a th:href="@{/index(cateId=${cate.categoryId})}" th:text="${cate.name}"></a>
+									</li>
+								</ul>
+							</li>
+
+							<li><a href="#">Pages</a>
+								<ul class="sub-menu">
+									<li><a th:href="@{/404}">404 page</a></li>
+									<li><a th:href="@{/about}">About</a></li>
+									<li><a th:href="@{/cart}">Cart</a></li>
+									<li><a th:href="@{/checkout}">Check Out</a></li>
+									<li><a th:href="@{/contact}">Contact</a></li>
+									<li><a th:href="@{/news}">News</a></li>
+									<li><a th:href="@{/shop}">Shop</a></li>
+								</ul>
+							</li>
+							<li><a th:href="@{/news}">News</a>
+								<ul class="sub-menu">
+									<li><a th:href="@{/news}">News</a></li>
+									<li><a th:href="@{/single-news}">Single News</a></li>
+								</ul>
+							</li>
+							<li><a th:href="@{/contact}">Contact</a></li>
+							<li><a th:href="@{/shop}">Shop</a>
+								<ul class="sub-menu">
+									<li><a th:href="@{/shop}">Shop</a></li>
+									<li><a th:href="@{/checkout}">Check Out</a></li>
+									<li><a th:href="@{/single-product}">Single Product</a></li>
+									<li><a href="@{/cart}">Cart</a></li>
+								</ul>
+							</li>
+							<li>
+								<div class="header-icons">
+									<!-- <a class="mobile-hide search-bar-icon" href="#"><i class="fas fa-search"></i></a> -->
+									<form action="/index" method="get">
+										<a class="shopping-cart" th:href="@{/cart}"><i class="fas fa-shopping-cart"> {{
+												cart.itemCount }}</i></a>
+										<input type="search" placeholder="Keywords" id="keyword" name="keyword">
+										<!-- <input  type="number" id="minPrice" name="minPrice" step="0.01">
+										<input  type="number" id="maxPrice" name="maxPrice" step="0.01"> -->
+										<button type="submit"><i class="fas fa-search"></i></button>
+									</form>
+								</div>
+							</li>
+						</ul>
+					</nav>
+					<a class="mobile-show search-bar-icon" href="#"><i class="fas fa-search"></i></a>
+					<div class="mobile-menu"></div>
+					<!-- menu end -->
 				</div>
 			</div>
 		</div>
 	</div>
-	<!-- end header -->
-	
+</div>
+<!-- end header -->
