@@ -31,46 +31,19 @@ public class shopController {
 		List<Category> cates = categoryServiceImpl.findAll();
 		model.addAttribute("cates", cates);
 
-		// Biến để kiểm tra có sản phẩm hay không
-		boolean hasItems = true;
-		List<Item> item;
-
-		if (cateId != null) {
-			item = itemService.getItemsByCategory(cateId);
-			Page<Item> itemsPage = itemService.getItemsByPage(page, size);
-			int totalPages = (int) Math.ceil((double) itemsPage.getTotalElements() / size);
-			model.addAttribute("currentPage", page);
-			if (totalPages < 1) {
-				totalPages = 1;
-			}
-			model.addAttribute("totalPages", totalPages);
-		} else {
-			Page<Item> itemsPage = itemService.getItemsByPage(page, size);
-			item = itemsPage.getContent();
-			model.addAttribute("currentPage", page);
-			int totalPages = (int) Math.ceil((double) itemsPage.getTotalElements() / size);
-			if (totalPages < 1) {
-				totalPages = 1;
-			}
-			model.addAttribute("totalPages", totalPages);
-		}
-		// Kiểm tra có sản phẩm hay không
-		hasItems = !item.isEmpty();
-		model.addAttribute("items", item);
-		model.addAttribute("hasItems", hasItems);
-
 		return "shop";
 	}
 
-	@GetMapping("/shop/{itemId}")
-	public String detal(@PathVariable int itemId, Model model) {
-		Item item = dao.findById(itemId).orElse(null);
-		model.addAttribute("items", item);
-		// Lấy danh sách sản phẩm cùng loại trừ sản phẩm đang hiển thị
+	// @GetMapping("/shop/{itemId}")
+	// public String detal(@PathVariable int itemId, Model model) {
+	// Item item = dao.findById(itemId).orElse(null);
+	// model.addAttribute("items", item);
+	// // Lấy danh sách sản phẩm cùng loại trừ sản phẩm đang hiển thị
 
-		List<Item> relatedProducts = itemService.getRelateditemsExcludingCurrent(item.getCategory().getCategoryId(),
-				itemId);
-		model.addAttribute("itemss", relatedProducts);
-		return "single-product";
-	}
+	// List<Item> relatedProducts =
+	// itemService.getRelateditemsExcludingCurrent(item.getCategory().getCategoryId(),
+	// itemId);
+	// model.addAttribute("itemss", relatedProducts);
+	// return "single-product";
+	// }
 }

@@ -33,18 +33,14 @@
 	<!-- responsive -->
 	<link rel="stylesheet" href="assets/css/responsive.css">
 
-	<!--  <style>
-
-	  .product-price::after {
-	    content: " ₫"; /* Đơn vị tiền tệ: đ (Đồng Việt Nam) */
-	  }
-	</style> -->
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
 	<script th:src="@{https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js}"></script>
 
 </head>
 
-<body>
+<body ng-app="shop-app" ng-controller="shop-controller">
 	<!--PreLoader-->
 	<div class="loader">
 		<div class="loader-inner">
@@ -96,80 +92,41 @@
 		<div class="container">
 
 			<div class="row">
-			
-			<div class="col-md-12">
-				<div class="product-filters">
-					<ul>
-						<li class="active" th:each="cate : ${cates}">
-							<a style="color: black;" th:href="@{/shop(cateId=${cate.categoryId})}"
-								th:text="${cate.name}"></a>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
 
-	
-		<div class="row product-lists">
-		
-				<div class="col-lg-4 col-md-6 text-center strawberry" th:each="item : ${items}">
-					<div class="single-product-item">
-						<div class="product-image">
-
-							<a th:href="@{/single-product}">
-								<img th:src="@{'/uploads/' + ${item.image.substring(11)}}" alt="Product Image"></a>
-						</div>
-						<h3 th:text="${item.name}"></h3>
-						<p class="product-price" th:text="${@customNumberFormat.formatCurrency(item.price)}"><span>Per
-								Kg</span> 85$ </p>
-						<a th:href="@{/cart}" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+				<div class="col-md-12">
+					<div class="product-filters">
+						<ul>
+							<li class="active" ng-repeat="category in categories">
+								<a style="color: black;" href="#" ng-click="loadItemsByCategory(category.categoryId)">{{
+									category.name }}</a>
+							</li>
+						</ul>
 					</div>
 				</div>
-			
-		</div>
+			</div>
 
-		<!-- Hiển thị thông báo nếu không có sản phẩm -->
-		<div class="row">
-			<div class="col-lg-8 offset-lg-2 text-center" th:if="${!hasItems}">
-				<div class="section-title">
-					<h4><span class="orange-text">Không có sản phẩm!!!</span> </h4>
+
+			<div class="row">
+				<div class="col-lg-4 col-md-6 text-center" ng-repeat="item in items">
+					<div class="single-product-item">
+						<div class="product-image">
+							<a ng-click="loadItemDetails(item.itemId)">
+								<img src="/uploads/{{item.image.substring(11)}}" alt="Product Image"></a>
+						</div>
+						<h3>{{item.name}}</h3>
+						<span>{{item.category.name}}</span>
+						<p class="product-price">{{item.price| number: 0}} vnđ</p>
+						<a ng-click=cart.add(item.itemId) class="cart-btn">
+							<i class="fas fa-shopping-cart"></i> Add to Cart</a>
+					</div>
 				</div>
 			</div>
-		</div>
-		
-		<div class="row">
-			<div class="col-lg-12 text-center">
-				<div class="pagination-wrap">
-					<ul>
-						<li th:if="${currentPage > 1}">
-							<a th:href="@{/shop(page=${currentPage - 1}, size=${size})}">Prev</a>
-						</li>
-						<li th:if="${currentPage == 1}">
-							<span>Prev</span>
-						</li>
 
-						<!-- Liên kết đến các trang -->
-						<li th:each="pageNumber : ${#numbers.sequence(1, totalPages)}">
-						<li th:if="${currentPage == pageNumber}">
-							<span th:text="${pageNumber}" class="active"></span>
-						</li>
-						<li th:unless="${currentPage == pageNumber}">
-							<a th:href="@{/shop(page=${pageNumber}, size=${size})}" th:text="${pageNumber}"></a>
-						</li>
-						</li>
+			<!-- Hiển thị thông báo nếu không có sản phẩm -->
 
-						<!-- Liên kết đến trang tiếp theo (next) -->
-						<li th:if="${currentPage < totalPages}">
-							<a th:href="@{/shop(page=${currentPage + 1}, size=${size})}">Next</a>
-						</li>
-						<li th:if="${currentPage == totalPages}">
-							<span>Next</span>
-						</li>
-					</ul>
-				</div>
-			</div>
+
+
 		</div>
-	</div>
 	</div>
 	<!-- end products -->
 
@@ -223,13 +180,7 @@
 	<script src="assets/js/sticker.js"></script>
 	<!-- main js -->
 	<script src="assets/js/main.js"></script>
-	<script>
-	// var app = angular.module('myApp', []);
-	// 	app.controller('myCtrl', function($scope) {
-	// 	  $scope.message = 'Hello, AngularJS!';
-    //       alert("Đây là thông báo đơn giản!");
-	// 	});
-	</script>
+	<script src="assets/js/shop-app.js"></script>
 </body>
 
 </html>

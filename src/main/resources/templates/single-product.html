@@ -1,79 +1,67 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="Responsive Bootstrap4 Shop Template, Created by Imran Hossain from https://imransdesign.com/">
+	<meta name="description"
+		content="Responsive Bootstrap4 Shop Template, Created by Imran Hossain from https://imransdesign.com/">
 
 	<!-- title -->
 	<title>Single Product</title>
 
-	  <!-- favicon -->
-	  <link rel="shortcut icon" type="image/png" th:href="@{/assets/img/favicon.png}">
-    
-	  <!-- google font -->
-	  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
-	  <link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
-	  
-	  <!-- fontawesome -->
-	  <link rel="stylesheet" th:href="@{/assets/css/all.min.css}">
-	  
-	  <!-- bootstrap -->
-	  <link rel="stylesheet" th:href="@{/assets/bootstrap/css/bootstrap.min.css}">
-	  
-	  <!-- owl carousel -->
-	  <link rel="stylesheet" th:href="@{/assets/css/owl.carousel.css}">
-	  
-	  <!-- magnific popup -->
-	  <link rel="stylesheet" th:href="@{/assets/css/magnific-popup.css}">
-	  
-	  <!-- animate css -->
-	  <link rel="stylesheet" th:href="@{/assets/css/animate.css}">
-	  
-	  <!-- mean menu css -->
-	  <link rel="stylesheet" th:href="@{/assets/css/meanmenu.min.css}">
-	  
-	  <!-- main style -->
-	  <link rel="stylesheet" th:href="@{/assets/css/main.css}">
-	  
-	  <!-- responsive -->
-	  <link rel="stylesheet" th:href="@{/assets/css/responsive.css}">
+	<!-- favicon -->
+	<link rel="shortcut icon" type="image/png" th:href="@{/assets/img/favicon.png}">
 
+	<!-- google font -->
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
+
+	<!-- fontawesome -->
+	<link rel="stylesheet" th:href="@{/assets/css/all.min.css}">
+
+	<!-- bootstrap -->
+	<link rel="stylesheet" th:href="@{/assets/bootstrap/css/bootstrap.min.css}">
+
+	<!-- owl carousel -->
+	<link rel="stylesheet" th:href="@{/assets/css/owl.carousel.css}">
+
+	<!-- magnific popup -->
+	<link rel="stylesheet" th:href="@{/assets/css/magnific-popup.css}">
+
+	<!-- animate css -->
+	<link rel="stylesheet" th:href="@{/assets/css/animate.css}">
+
+	<!-- mean menu css -->
+	<link rel="stylesheet" th:href="@{/assets/css/meanmenu.min.css}">
+
+	<!-- main style -->
+	<link rel="stylesheet" th:href="@{/assets/css/main.css}">
+
+	<!-- responsive -->
+	<link rel="stylesheet" th:href="@{/assets/css/responsive.css}">
+
+	<script th:src="@{https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js}"></script>
 </head>
-<body>
-	
+
+<body ng-app="index-app" ng-controller="index-controller">
+
 	<!--PreLoader-->
-    <div class="loader">
-        <div class="loader-inner">
-            <div class="circle"></div>
-        </div>
-    </div>
-    <!--PreLoader Ends-->
-	
+	<div class="loader">
+		<div class="loader-inner">
+			<div class="circle"></div>
+		</div>
+	</div>
+	<!--PreLoader Ends-->
+
 	<!-- header -->
 	<div th:include="/layout/nav.html"></div>
 	<!-- end header -->
 
 	<!-- search area -->
-	<div class="search-area">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-12">
-					<span class="close-btn"><i class="fas fa-window-close"></i></span>
-					<div class="search-bar">
-						<div class="search-bar-tablecell">
-							<h3>Search For:</h3>
-							<input type="text" placeholder="Keywords">
-							<button type="submit">Search <i class="fas fa-search"></i></button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
 	<!-- end search arewa -->
-	
+
 	<!-- breadcrumb-section -->
 	<div class="breadcrumb-section breadcrumb-bg">
 		<div class="container">
@@ -92,23 +80,24 @@
 	<!-- single product -->
 	<div class="single-product mt-150 mb-150">
 		<div class="container">
-			<div class="row" th:object="${items}">
+			<div class="row">
 				<div class="col-md-5">
 					<div class="single-product-img">
-						<img th:src="@{'/uploads/' + ${items.image.substring(11)}}" alt="Product Image">
+						<img src="/uploads/{{item.image.substring(11)}}" alt="Product Image">
 					</div>
 				</div>
 				<div class="col-md-7">
 					<div class="single-product-content">
-						<h3 th:text="${items.name}"></h3>
+						<h3>{{ item.name }}</h3>
 						<span></span>
-						<p class="single-product-pricing" th:text="${@customNumberFormat.formatCurrency(items.price)}"></p>
+						<p class="single-product-pricing">{{ item.price |number : 0 }}</p>
 						<div class="single-product-form">
 							<form action="index.html">
 								<input type="number" placeholder="0">
 							</form>
-							<a th:href="@{/cart}" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a><br>
-							<h4>Categories:</h4> <span th:text="${items.Category.name}"></span>
+							<a th:href="@{/cart}" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to
+								Cart</a><br>
+							<h4>Categories:</h4> <span>{{ item.Category.name }}</span>
 						</div>
 						<h4>Share:</h4>
 						<ul class="product-share">
@@ -129,24 +118,25 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-8 offset-lg-2 text-center">
-					<div class="section-title">	
+					<div class="section-title">
 						<h3><span class="orange-text">Related</span> Products</h3>
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, fuga quas itaque eveniet beatae optio.</p>
+						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, fuga quas itaque eveniet
+							beatae optio.</p>
 					</div>
 				</div>
 			</div>
 			<div class="row">
-					<div class="col-lg-4 col-md-6 text-center" th:each="item : ${itemss}">
-						<div class="single-product-item">
-							<div class="product-image">
-								<a th:href="@{/shop/{itemId}(itemId=${item.itemId})}">
-									<img th:src="@{'/uploads/' + ${item.image.substring(11)}}" alt="Product Image"></a>
-							</div>
-							<h3 th:text="${item.name}"></h3>
-							<span>Đồ ăn</span>
-							<p class="product-price" th:text="${@customNumberFormat.formatCurrency(item.price)}"></p>
-							<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+				<div class="col-lg-4 col-md-6 text-center" ng-repeat="product in relatedProducts">
+					<div class="single-product-item">
+						<div class="product-image">
+							<a ng-click="loadItemDetails(product.itemId)">
+								<img src="/uploads/{{product.image.substring(11)}}" alt="Product Image"></a>
 						</div>
+						<h3>{{product.name}}</h3>
+						<span>Đồ ăn</span>
+						<p class="product-price">{{ product.price |number : 0 }}</p>
+						<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -181,28 +171,29 @@
 	</div>
 	<!-- end logo carousel -->
 
-  <div th:include="/layout/footer.html"></div>
-	
-	<!-- jQuery -->
-    <script th:src="@{/assets/js/jquery-1.11.3.min.js}"></script>
-    <!-- bootstrap -->
-    <script th:src="@{/assets/bootstrap/js/bootstrap.min.js}"></script>
-    <!-- count down -->
-    <script th:src="@{/assets/js/jquery.countdown.js}"></script>
-    <!-- isotope -->
-    <script th:src="@{/assets/js/jquery.isotope-3.0.6.min.js}"></script>
-    <!-- waypoints -->
-    <script th:src="@{/assets/js/waypoints.js}"></script>
-    <!-- owl carousel -->
-    <script th:src="@{/assets/js/owl.carousel.min.js}"></script>
-    <!-- magnific popup -->
-    <script th:src="@{/assets/js/jquery.magnific-popup.min.js}"></script>
-    <!-- mean menu -->
-    <script th:src="@{/assets/js/jquery.meanmenu.min.js}"></script>
-    <!-- sticker js -->
-    <script th:src="@{/assets/js/sticker.js}"></script>
-    <!-- main js -->
-    <script th:src="@{/assets/js/main.js}"></script>
+	<div th:include="/layout/footer.html"></div>
 
+	<!-- jQuery -->
+	<script th:src="@{/assets/js/jquery-1.11.3.min.js}"></script>
+	<!-- bootstrap -->
+	<script th:src="@{/assets/bootstrap/js/bootstrap.min.js}"></script>
+	<!-- count down -->
+	<script th:src="@{/assets/js/jquery.countdown.js}"></script>
+	<!-- isotope -->
+	<script th:src="@{/assets/js/jquery.isotope-3.0.6.min.js}"></script>
+	<!-- waypoints -->
+	<script th:src="@{/assets/js/waypoints.js}"></script>
+	<!-- owl carousel -->
+	<script th:src="@{/assets/js/owl.carousel.min.js}"></script>
+	<!-- magnific popup -->
+	<script th:src="@{/assets/js/jquery.magnific-popup.min.js}"></script>
+	<!-- mean menu -->
+	<script th:src="@{/assets/js/jquery.meanmenu.min.js}"></script>
+	<!-- sticker js -->
+	<script th:src="@{/assets/js/sticker.js}"></script>
+	<!-- main js -->
+	<script th:src="@{/assets/js/main.js}"></script>
+	<script src="assets/js/index-app.js"></script>
 </body>
+
 </html>

@@ -98,8 +98,9 @@ public class ItemRestController {
 			orderItem.setQuantity(quantity); // Số lượng sản phẩm được chuyển từ Angular
 			// Thiết lập các thông tin khác cho chi tiết đơn hàng
 			orderItemDao.save(orderItem);
+			return ResponseEntity.ok().body("{\"message\": \"Sản phẩm đã thêm trong giỏ hàng!!!\"}");
 		}
-		return ResponseEntity.ok("{\"message\": \"Item added to cart!\"}");
+		return ResponseEntity.ok().body("{\"message\": \"Sản phẩm đã thêm trong giỏ hàng!!!\"}");
 	}
 
 	@DeleteMapping("/remove-from-cart/{itemId}/{accountId}")

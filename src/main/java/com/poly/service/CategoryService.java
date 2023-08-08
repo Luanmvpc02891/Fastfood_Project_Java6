@@ -11,7 +11,7 @@ import com.poly.entity.Category;
 @Service
 
 public interface CategoryService {
-	
+
 	List<Category> findAll();
 
 }

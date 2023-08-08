@@ -39,15 +39,17 @@ public class Account implements Serializable {
 	@Column(name = "image")
 	private String image;
 
-	@Column(name = "address")
-	private String address;
+	@ManyToOne
+	@JoinColumn(name = "address_city")
+	private AddressCity addressCity;
 
 	@ManyToOne
-	@JoinColumn(name = "roles")
-	private Role role;
+	@JoinColumn(name = "address_district")
+	private AddressDistrict addressDistrict;
 
 	@Column(name = "active")
 	private boolean active;
 
 	// Getters and Setters
+
 }
