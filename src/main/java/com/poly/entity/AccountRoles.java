@@ -10,9 +10,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Data;
 
+@Data
 @Entity
-@Table(name = "AccountRoles")
+@Table(name = "account_roles")
 public class AccountRoles implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

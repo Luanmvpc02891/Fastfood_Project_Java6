@@ -14,13 +14,18 @@
     <title>Ample Admin Lite Template by WrapPixel</title>
     <link rel="canonical" href="https://www.wrappixel.com/templates/ample-admin-lite/" />
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="plugins/images/favicon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/src/main/resources/static/plugins/images/favicon.png">
     <!-- Custom CSS -->
     <link href="css/style.min.css" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <script th:src="@{https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js}"></script>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 </head>
 
-<body>
+<body ng-app="item-app" ng-controller="item-controller">
     <!-- ============================================================== -->
     <!-- Preloader - style you can find in spinners.css -->
     <!-- ============================================================== -->
@@ -157,7 +162,8 @@
                     <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
                         <div class="d-md-flex">
                             <ol class="breadcrumb ms-auto">
-                                <input class="form-control" type="text" placeholder="Enter username" style="width: 200px;">
+                                <input class="form-control" type="text" placeholder="Enter username"
+                                    style="width: 200px;">
                             </ol>
                         </div>
                     </div>
@@ -189,97 +195,164 @@
                                         <table class="table text-nowrap">
                                             <thead>
                                                 <tr>
-                                                    <th class="border-top-0">STT</th>
-                                                    <th class="border-top-0">Ảnh</th>
-                                                    <th class="border-top-0">Tên</th>
-                                                    <th class="border-top-0">Đơn giá</th>
-                                                    <th class="border-top-0">Số lượng</th>
-                                                    <th class="border-top-0"></th>
+                                                    <th class="border-top-0">ID</th>
+                                                    <th class="border-top-0">Name</th>
+                                                    <th class="border-top-0">Image</th>
+                                                    <th class="border-top-0">Price(VNĐ)</th>
+                                                    <th class="border-top-0">Category</th>
+                                                    <th class="border-top-0">Discount</th>
+                                                    <th class="border-top-0">Status</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td><img src="https://product.hstatic.net/200000233557/product/z1794611983850_b2a6a19a040c91457438eeda499874f3_49eccbd397a3493a80c1ab2674068a9f_grande.jpg"
+                                                <tr ng-repeat="item in pager.items">
+                                                    <td>{{item.itemId}}</td>
+                                                    <td>{{item.name}}</td>
+                                                    <td><img ng-src="/images/{{item.image}}"
                                                             style="width: 50px; height: 50px"></td>
-                                                    <td>Bánh chuối</td>
-                                                    <td>56.000 vnđ</td>
-                                                    <td>10</td>
-                                                    <td><i class='bx bx-edit'></i><i
-                                                            class='bx bxs-message-x'></i></td>
+                                                    <td>{{item.price | number : 0}}</td>
+                                                    <td>{{item.category.name}}</td>
+                                                    <td>{{item.codeId.code}}</td>
+                                                    <td>{{item.status?'Còn':'Hết'}}</td>
+                                                    <td><a ng-click="edit(item)" href=""><i class='bx bx-edit'></i></a>
+                                                        <a href="" ng-click="deactivateItem(item)"> <i
+                                                                class='bx bxs-message-x'></i></a>
+                                                    </td>
                                                 </tr>
-                                                <tr>
-                                                    <td>2</td>
-                                                    <td><img src="https://product.hstatic.net/200000233557/product/img_1808_69480ad22c0e4fbca8060011ea66064a_grande.jpg"
-                                                            style="width: 50px; height: 50px"></td>
-                                                    <td>Cá kho tộ</td>
-                                                    <td>100.000 vnđ</td>
-                                                    <td>12</td>
-                                                    <td><i class='bx bx-edit'></i><i
-                                                        class='bx bxs-message-x'></i></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>3</td>
-                                                    <td><img src="https://product.hstatic.net/200000233557/product/z_burger_2vvvvv_1519bf97547048a794fb4d1aa72257c8_grande.jpg"
-                                                            style="width: 50px; height: 50px"></td>
-                                                    <td>Hamberger</td>
-                                                    <td>50.000 vnđ</td>
-                                                    <td>32</td>
-                                                    <td><i class='bx bx-edit'></i><i
-                                                        class='bx bxs-message-x'></i></td>
-                                                </tr>
-
                                             </tbody>
                                         </table>
+                                        <div class="panel-footer text-center" s>
+                                            <button class="btn btn-primary" ng-click="pager.first()"
+                                                ng-disabled="pager.page === 0"> <i
+                                                    class="fas fa-arrow-circle-up"></i></button>
+                                            <button class="btn btn-success" ng-click="pager.prev()"
+                                                ng-disabled="pager.page === 0"> <i
+                                                    class="fas fa-arrow-circle-left"></i></button>
+                                            <span>Page {{ pager.page + 1 }} / {{ pager.count }}</span>
+                                            <button class="btn btn-success" ng-click="pager.next()"
+                                                ng-disabled="pager.page === pager.count - 1"> <i
+                                                    class="fas fa-arrow-circle-right"></i></button>
+                                            <button class="btn btn-primary" ng-click="pager.last()"
+                                                ng-disabled="pager.page === pager.count - 1"> <i
+                                                    class="fas fa-arrow-circle-down"></i></button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <!-- Column -->
                         <!-- Column -->
-                        <div class="col-lg-8 col-xlg-9 col-md-12">
+                        <div class="col-lg-12 col-xlg-12 col-md-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <form class="form-horizontal form-material">
-                                        <div class="form-group mb-4">
-                                            <label class="col-md-12 p-0">Sản phẩm ID:</label>
-                                            <div class="col-md-12 border-bottom p-0">
-                                                <input type="text" placeholder="Johnathan Doe"
-                                                    class="form-control p-0 border-0">
+                                    <form class="form-horizontal form-material" name="form">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group"
+                                                    style="border: 1px solid rgb(221, 218, 218); height: 250px;">
+                                                    <div class="nk-int-st image-container">
+                                                        <img class="object-fit" id="image"
+                                                            ng-src="/images/{{newItem.image}}" alt="Uploaded Image"
+                                                            name="image" style="max-height: 250px; width: 100%;">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="fileInput" class="fw-bold">Chọn Hình</label>
+                                                    <div class="input-group">
+                                                        <input style="object-fit: contain;" type="file"
+                                                            class="form-control" ng-model="newItem.image"
+                                                            onchange="angular.element(this).scope().imageChanged(this.files)"
+                                                            accept=".png, .jpg, .jpeg, .gif" id="image" name="image">
+                                                        <div ng-messages="form.image.$error" ng-if="!form.image.$dirty">
+                                                            <div class="text-danger" ng-message="required">Vui lòng chọn
+                                                                ảnh </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group mb-4">
-                                            <label class="col-md-12 p-0">Ảnh</label>
-                                            <div class="col-md-12 border-bottom p-0">
-                                                <input type="file" 
-                                                    class="form-control p-0 border-0">
-                                            </div>
-                                        </div>
-                                        <div class="form-group mb-4">
-                                            <label class="col-md-12 p-0">Tên sản phẩm</label>
-                                            <div class="col-md-12 border-bottom p-0">
-                                                <input type="text" 
-                                                    class="form-control p-0 border-0">
-                                            </div>
-                                        </div>
-                                        <div class="form-group mb-4">
-                                            <label for="example-email" class="col-md-12 p-0">Đơn giá</label>
-                                            <div class="col-md-12 border-bottom p-0">
-                                                <input type="text" 
-                                                    class="form-control p-0 border-0" >
-                                            </div>
-                                        </div>
+                                            <div class="col-md-8">
+                                                <div class="form-group mb-4">
+                                                    <label class="col-md-12 p-0">ID:</label>
+                                                    <div class="col-md-12 border-bottom p-0">
+                                                        <input type="text" placeholder="Không nhập vào đây!!"
+                                                            id="itemId" name="itemId" class="form-control p-0 border-0"
+                                                            ng-model="newItem.itemId" readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group mb-4">
+                                                    <label class="col-md-12 p-0">Name</label>
+                                                    <div class="col-md-12 border-bottom p-0">
+                                                        <input type="text" id="name" name="name" placeholder="Name item"
+                                                            class="form-control p-0 border-0" ng-model="newItem.name">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group mb-4">
+                                                    <label for="example-email" class="col-md-12 p-0">Price(VNĐ)</label>
+                                                    <div class="col-md-12 border-bottom p-0">
+                                                        <input type="text" class="form-control p-0 border-0" id="price"
+                                                            name="price" ng-model="newItem.price"
+                                                            placeholder="Price item">
+                                                    </div>
+                                                </div>
 
-                                        <div class="form-group mb-4">
-                                            <label class="col-md-12 p-0">Số lượng</label>
-                                            <div class="col-md-12 border-bottom p-0">
-                                                <input type="bumber" 
-                                                    class="form-control p-0 border-0">
-                                            </div>
-                                        </div>
-                                        <div class="form-group mb-4">
-                                            <div class="col-sm-12">
-                                                <button class="btn btn-success">Đồng ý</button>
+                                                <div class="form-group mb-4"
+                                                    ng-class="{'has-error': form.category.$invalid && form.category.$dirty}">
+                                                    <label class="col-md-12 p-0">Caterogy</label>
+                                                    <div class="col-md-12 border-bottom p-0">
+                                                        <select name="category" class="form-control" id="category"
+                                                            ng-model="newItem.category"
+                                                            ng-options="add as add.name for add in categories track by add.categoryId">
+                                                            <option value="">Chon loại</option>
+                                                        </select>
+                                                        <div ng-messages="form.category.$error"
+                                                            ng-if="!form.category.$dirty">
+                                                            <div class="text-danger" ng-message="required">Vui lòng nhập
+                                                                địa chỉ thành phố</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group mb-4"
+                                                    ng-class="{'has-error': form.codeId.$invalid && form.codeId.$dirty}">
+                                                    <label class="col-md-12 p-0">Discount</label>
+                                                    <div class="col-md-12 border-bottom p-0">
+                                                        <select name="codeId" class="form-control" id="codeId"
+                                                            ng-model="newItem.codeId"
+                                                            ng-options="add as add.code for add in discounts track by add.codeId">
+                                                            <option value="">Chon giảm giá</option>
+                                                        </select>
+                                                        <div ng-messages="form.codeId.$error"
+                                                            ng-if="!form.codeId.$dirty">
+                                                            <div class="text-danger" ng-message="required">Vui lòng chọn
+                                                                giảm giá</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group mb-4">
+                                                    <label class="col-md-12 p-0">Status</label>
+                                                    <div class="col-md-12 border-bottom p-0">
+                                                        <input type="radio" id="status" name="status" ng-value="true"
+                                                            ng-model="newItem.status" ng-required="true" /> <label
+                                                            for="admin">On</label><br>
+                                                        <input type="radio" id="status" name="status" ng-value="false"
+                                                            ng-model="newItem.status" ng-required="true" /> <label
+                                                            for="user">Off</label><br>
+                                                        <div ng-messages="form.status.$error"
+                                                            ng-if="!form.status.$dirty">
+                                                            <div class="text-danger" ng-message="required">Vui lòng chọn
+                                                                trạng thái!! </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group mb-4">
+                                                    <div class="col-sm-12">
+                                                        <button ng-click="addItem()" ng-disabled="form.$invalid"
+                                                            class="btn btn-success">Create</button>
+                                                        <button class="btn btn-primary"
+                                                            ng-click="updateItem(item)">Update</button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </form>
@@ -314,7 +387,8 @@
         <script src="js/sidebarmenu.js"></script>
         <!--Custom JavaScript -->
         <script src="js/custom.js"></script>
-        
+        <script src="js/item-app.js"></script>
+
 </body>
 
 </html>

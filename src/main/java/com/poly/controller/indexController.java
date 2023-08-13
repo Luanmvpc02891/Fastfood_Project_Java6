@@ -114,7 +114,7 @@ public class indexController {
 		return "single-news";
 	}
 
-	@GetMapping("/single-product")
+	@GetMapping("/single-product/{itemId}")
 	public String singleproduct(Model model) {
 		return "single-product";
 	}

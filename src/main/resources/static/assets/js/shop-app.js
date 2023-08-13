@@ -53,17 +53,27 @@ app.controller('shop-controller', function ($scope, $http , $window) {
             }
         },
     }
+    $scope.page = 0;
     $scope.currentPage = 0;
     $scope.totalPages = 0;
     $scope.items = [];
+    $scope.item = {};
+    $scope.relatedProducts = [];
 //load dữ liệu
-    $http.get('/api/shop/items')
-    .then(function (response) {
-        $scope.items = response.data.content;
-    })
-    .catch(function (error) {
-        console.error('Error fetching items:', error);
-    });
+    // $http.get('/api/shop/items')
+    // .then(function (response) {
+    //     $scope.items = response.data.content;
+    // })
+    // .catch(function (error) {
+    //     console.error('Error fetching items:', error);
+    // });
+    $scope.loadItem = function () {
+        $http.get('/api/shop/items')
+            .then(function (response) {
+                $scope.items = response.data;
+            });
+    };
+
     $scope.loadCategories = function () {
         $http.get('/api/shop/categories')
             .then(function (response) {
@@ -73,6 +83,7 @@ app.controller('shop-controller', function ($scope, $http , $window) {
                 console.error('Error fetching categories:', error);
             });
     };
+    
     $scope.loadItemsByCategory = function (categoryId) {
         $http.get('/api/shop/items/by-category?categoryId=' + categoryId)
             .then(function (response) {
@@ -130,6 +141,60 @@ app.controller('shop-controller', function ($scope, $http , $window) {
             onClick: function () { }
         }).showToast();
     };
-    $scope.loadCategories();
+    $scope.loadItemDetails = function (itemId) {
+        $http.get(`/api/shop/item/${itemId}`)
+            .then(function (response) {
+                $scope.item = response.data.item;
+                $scope.relatedProducts = response.data.relatedProducts;
+                // Không cần chuyển hướng tại đây nữa
+            })
+            .catch(function (error) {
+                console.error('Error fetching item details:', error);
+            });
+    };
+    function filterItemsByStatus(isActive) {
+        return $scope.items.filter(function (item) {
+            return item.active === isActive;
+        });
+    }
+
+    $scope.pager = {
+        page: 0,
+        size: 6,
+        isActive: true,
+
+        get items() {
+            var filteredItems = filterItemsByStatus(this.isActive);
+            var start = this.page * this.size;
+            return filteredItems.slice(start, start + this.size);
+        },
+
+        get count() {
+            var filteredItems = filterItemsByStatus(this.isActive);
+            return Math.ceil(1.0 * filteredItems.length / this.size);
+        },
+
+        first() {
+            this.page = 0;
+        },
+        prev() {
+            this.page--;
+            if (this.page < 0) {
+                this.last();
+            }
+        },
+        next() {
+            this.page++;
+            if (this.page >= this.count) {
+                this.first();
+            }
+        },
+        last() {
+            this.page = this.count - 1;
+        }
+    };
+    $scope.loadCategories($scope.page);
     $scope.cart.loadCartItems();
+    $scope.loadItem($scope.page);
+   
 });

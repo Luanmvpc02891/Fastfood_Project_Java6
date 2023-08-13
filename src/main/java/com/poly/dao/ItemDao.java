@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.poly.entity.Account;
 import com.poly.entity.Item;
 
 public interface ItemDao extends JpaRepository<Item, Integer> {
@@ -24,5 +25,7 @@ public interface ItemDao extends JpaRepository<Item, Integer> {
     Page<Item> findByNameContaining(String keyword, PageRequest pageRequest);
 
     Page<Item> findByCategoryCategoryId(Integer categoryId, PageRequest pageRequest);
+
+    Item findById(int itemId);
 
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.poly.dao.ItemDao;
 import com.poly.entity.Category;
 import com.poly.entity.Item;
+import com.poly.entity.ItemDetailResponse;
 import com.poly.service.CategoryServiceImpl;
 import com.poly.service.ItemService;
 
@@ -33,17 +34,16 @@ public class ShopRestController {
     @Autowired
     private CategoryServiceImpl categoryService;
 
-    // @GetMapping("/{itemId}")
-    // public ResponseEntity<Map<String, Object>> getItemDetails(@PathVariable int
-    // itemId) {
+    // @GetMapping("{itemId}")
+    // public ResponseEntity<Map<String, Object>>
+    // getItemDetails(@PathVariable("itemId") Integer itemId) {
     // Item item = itemService.findById(itemId);
     // if (item == null) {
     // return ResponseEntity.notFound().build();
     // }
 
-    // List<Item> relatedProducts =
-    // itemService.getRelateditemsExcludingCurrent(item.getCategory().getCategoryId(),
-    // itemId);
+    // List<Item> relatedProducts = itemService.getRelateditemsExcludingCurrent(
+    // item.getCategory().getCategoryId(), itemId);
 
     // Map<String, Object> response = new HashMap<>();
     // response.put("item", item);
@@ -52,17 +52,22 @@ public class ShopRestController {
     // return ResponseEntity.ok(response);
     // }
 
-    @GetMapping("{itemId}")
-    public Item getOne(@PathVariable("itemId") Integer itemId) {
-        return itemService.findById(itemId);
-    }
+    // @GetMapping("{itemId}")
+    // public Item getOne(@PathVariable("itemId") Integer itemId) {
+    // return itemService.findById(itemId);
+    // }
+
+    // @GetMapping("/items")
+    // public Page<Item> getItems(
+    // @RequestParam(name = "page", defaultValue = "0") int page,
+    // @RequestParam(name = "size", defaultValue = "6") int size) {
+    // PageRequest pageRequest = PageRequest.of(page, size);
+    // return itemRepository.findAll(pageRequest);
+    // }
 
     @GetMapping("/items")
-    public Page<Item> getItems(
-            @RequestParam(name = "page", defaultValue = "0") int page,
-            @RequestParam(name = "size", defaultValue = "3") int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        return itemRepository.findAll(pageRequest);
+    public List<Item> getAllItem() {
+        return itemRepository.findAll();
     }
 
     @GetMapping("/categories")
@@ -74,7 +79,7 @@ public class ShopRestController {
     public Page<Item> getItemsByCategory(
             @RequestParam(name = "categoryId") Integer categoryId,
             @RequestParam(name = "page", defaultValue = "0") int page,
-            @RequestParam(name = "size", defaultValue = "3") int size) {
+            @RequestParam(name = "size", defaultValue = "6") int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         return itemRepository.findByCategoryCategoryId(categoryId, pageRequest);
     }
@@ -86,5 +91,22 @@ public class ShopRestController {
             @RequestParam(name = "size", defaultValue = "6") int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         return itemRepository.findByNameContaining(keyword, pageRequest);
+    }
+
+    @GetMapping("/item/{itemId}")
+    public ResponseEntity<ItemDetailResponse> getItemDetail(@PathVariable int itemId) {
+        Item item = itemService.findById(itemId);
+        if (item == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        List<Item> relatedProducts = itemService.getRelateditemsExcludingCurrent(
+                item.getCategory().getCategoryId(), itemId);
+
+        ItemDetailResponse response = new ItemDetailResponse();
+        response.setItem(item);
+        response.setRelatedProducts(relatedProducts);
+
+        return ResponseEntity.ok(response);
     }
 }

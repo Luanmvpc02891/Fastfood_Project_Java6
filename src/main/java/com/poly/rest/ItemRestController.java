@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -13,15 +15,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.poly.dao.AccountDao;
+import com.poly.dao.ItemDao;
 import com.poly.dao.OrderItemDao;
 import com.poly.dao.OrdersDao;
 import com.poly.entity.Account;
+import com.poly.entity.Category;
 import com.poly.entity.Item;
 import com.poly.entity.Order;
 import com.poly.entity.OrderItem;
+import com.poly.service.CategoryServiceImpl;
 import com.poly.service.ItemService;
 import com.poly.service.OrderService;
 import com.poly.service.SessionService;
@@ -37,6 +43,9 @@ public class ItemRestController {
 	OrdersDao orderDao;
 
 	@Autowired
+	ItemDao itemDao;
+
+	@Autowired
 	OrderItemDao orderItemDao;
 
 	@Autowired
@@ -47,6 +56,9 @@ public class ItemRestController {
 
 	@Autowired
 	OrderService orderService;
+
+	@Autowired
+	private CategoryServiceImpl categoryService;
 
 	@GetMapping("{itemId}")
 	public Item getOne(@PathVariable("itemId") Integer itemId) {
@@ -155,6 +167,20 @@ public class ItemRestController {
 
 		return ResponseEntity.ok().body("{\"message\": \"Đã cập nhật số lượng!\"}");
 
+	}
+
+	@GetMapping("/categories")
+	public List<Category> getCategories() {
+		return categoryService.findAll();
+	}
+
+	@GetMapping("/items/by-category")
+	public Page<Item> getItemsByCategory(
+			@RequestParam(name = "categoryId") Integer categoryId,
+			@RequestParam(name = "page", defaultValue = "0") int page,
+			@RequestParam(name = "size", defaultValue = "3") int size) {
+		PageRequest pageRequest = PageRequest.of(page, size);
+		return itemDao.findByCategoryCategoryId(categoryId, pageRequest);
 	}
 
 }

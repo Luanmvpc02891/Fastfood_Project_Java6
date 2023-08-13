@@ -75,7 +75,7 @@
 			<div class="row">
 				<div class="col-lg-8 offset-lg-2 text-center">
 					<div class="breadcrumb-text">
-						<p>Fresh and Organic</p>
+						<p>Fast Foods</p>
 						<h1>Cart</h1>
 					</div>
 				</div>
@@ -105,17 +105,17 @@
 							<tbody>
 								<tr class="table-body-row" ng-repeat="item in cart.items">
 									<td class="product-total"><input type="checkbox" ng-model="item.selected" class="checkbox"></td>
-									<td class="product-image"> <img src="/uploads/{{item.item.image.substring(11)}}" alt="Product Image"></td>
+									<td class="product-image"> <img ng-src="/images/{{item.item.image}}" alt="Product Image"></td>
 									<td class="product-name">{{item.item.name}}</td>
 									<td class="product-price">{{item.item.price| number: 0}} vnđ</td>
 									<td class="product-quantity"><input ng-change="updateCartItemQuantity(item)"  ng-model="item.quantity" type="number" min="1"></td>
 									<td class="product-total">{{item.quantity*item.item.price | number: 0}} vnđ</td>
-									<td class="product-remove"><button ng-click="cart.removeFromCart(item.item.itemId)"><i class="far fa-window-close"></i></button></td>
+									<td class="product-remove"><a class="boxed-btn" ng-click="cart.removeFromCart(item.item.itemId)"><i class="far fa-window-close"></i></a></td>
 								</tr>
 							</tbody>
 						</table>
 						<div class="cart-buttons"style="float: right;">
-							<a class="boxed-btn" ng-click="removeSelectedItems()">Xóa</a>
+							<a class="boxed-btn" ng-hidden="itemCount = 2" ng-click="removeSelectedItems()">Xóa</a>
 						</div>
 					</div>
 				</div>
@@ -136,8 +136,7 @@
 							</tbody>
 						</table>
 						<div class="cart-buttons">
-							<a href="cart.html" class="boxed-btn">Update Cart</a>
-							<a href="checkout.html" class="boxed-btn black">Check Out</a>
+							<a href="/checkout" class="boxed-btn black">Check Out</a>
 						</div>
 					</div>
 
@@ -177,22 +176,7 @@
 	<!-- end logo carousel -->
 
 	  <div th:include="/layout/footer.html"></div>
-	  <script>
-        // Lấy ra checkbox chứa ID "checkAll"
-        var checkAll = document.getElementById('checkAll');
-
-        // Lấy ra tất cả các checkbox có class là "checkbox"
-        var checkboxes = document.getElementsByClassName('checkbox');
-
-        // Gán sự kiện onclick cho checkbox "checkAll"
-        checkAll.onclick = function() {
-            // Duyệt qua tất cả các checkbox và thay đổi trạng thái checked của chúng
-            for (var i = 0; i < checkboxes.length; i++) {
-                checkboxes[i].checked = checkAll.checked;
-            }
-        };
-    </script>
-    
+	  
     <!-- jquery -->
     <script th:src="@{/assets/js/jquery-1.11.3.min.js}"></script>
     <!-- bootstrap -->

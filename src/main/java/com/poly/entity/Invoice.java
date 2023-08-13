@@ -37,7 +37,13 @@ public class Invoice implements Serializable {
 	private double totalAmount;
 
 	@Column(name = "payment_method")
-	private String paymentMethod;
+	private int paymentMethod;
+
+	@Column(name = "ship_fee")
+	private double shipfee;
+
+	@Column(name = "status")
+	private boolean status;
 
 	// Getters and Setters
 }

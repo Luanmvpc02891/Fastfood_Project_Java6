@@ -107,11 +107,11 @@
 
 
 			<div class="row">
-				<div class="col-lg-4 col-md-6 text-center" ng-repeat="item in items">
+				<div class="col-lg-4 col-md-6 text-center" ng-repeat="item in pager.items">
 					<div class="single-product-item">
 						<div class="product-image">
 							<a ng-click="loadItemDetails(item.itemId)">
-								<img src="/uploads/{{item.image.substring(11)}}" alt="Product Image"></a>
+								<img ng-src="/images/{{item.image}}" alt="Product Image"></a>
 						</div>
 						<h3>{{item.name}}</h3>
 						<span>{{item.category.name}}</span>
@@ -121,7 +121,21 @@
 					</div>
 				</div>
 			</div>
-
+			<div class="panel-footer text-center" s>
+				<button class="btn btn-primary" ng-click="pager.first()"
+					ng-disabled="pager.page === 0"> <i
+						class="fas fa-arrow-circle-up"></i></button>
+				<button class="btn btn-success" ng-click="pager.prev()"
+					ng-disabled="pager.page === 0"> <i
+						class="fas fa-arrow-circle-left"></i></button>
+				<span>Page {{ pager.page + 1 }} / {{ pager.count }}</span>
+				<button class="btn btn-success" ng-click="pager.next()"
+					ng-disabled="pager.page === pager.count - 1"> <i
+						class="fas fa-arrow-circle-right"></i></button>
+				<button class="btn btn-primary" ng-click="pager.last()"
+					ng-disabled="pager.page === pager.count - 1"> <i
+						class="fas fa-arrow-circle-down"></i></button>
+			</div>
 			<!-- Hiển thị thông báo nếu không có sản phẩm -->
 
 

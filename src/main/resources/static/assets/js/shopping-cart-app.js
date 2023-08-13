@@ -76,9 +76,22 @@ app.controller("shopping-cart-ctrl", function ($scope, $http) {
             }
         },
         
-        
     }
-    
+    $scope.alertInfo = function (message) {
+        Toastify({
+            text: message,
+            duration: 1000,
+            newWindow: true,
+            gravity: "top",
+            position: "center",
+            stopOnFocus: true,
+            style: {
+                background: "#rgb(255, 165, 0)",
+                color: "white",
+            },
+            onClick: function () { }
+        }).showToast();
+    };
     $scope.alertSuccess = function (message) {
         Toastify({
             text: message,
@@ -143,6 +156,30 @@ app.controller("shopping-cart-ctrl", function ($scope, $http) {
             });
     };
     
+    $scope.loadCategories = function () {
+        $http.get('/rest/products/categories')
+            .then(function (response) {
+                $scope.categories = response.data;
+            })
+            .catch(function (error) {
+                console.error('Error fetching categories:', error);
+            });
+    };
+    $scope.loadItemsByCategory = function (categoryId) {
+        $http.get('/rest/products/items/by-category?categoryId=' + categoryId)
+            .then(function (response) {
+                $scope.items = response.data.content;
+                $scope.totalPages = response.data.totalPages;
+                if ($scope.items.length === 0) {
+                    $scope.alertInfo("Không có sản phẩm!!!");
+                }
+            })
+            .catch(function (error) {
+                console.error('Error fetching items by category:', error);
+            });
+    };
+
+    $scope.loadCategories();
     $scope.cart.loadCartItems();
 
 });
