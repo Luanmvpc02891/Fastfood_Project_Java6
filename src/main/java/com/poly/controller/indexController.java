@@ -1,5 +1,7 @@
 package com.poly.controller;
 
+import java.math.BigDecimal;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
@@ -17,7 +19,13 @@ import com.poly.repository.UserRepository;
 import com.poly.service.SessionService;
 
 
-
+import com.poly.dao.CategoryDao;
+import com.poly.dao.ItemDao;
+import com.poly.entity.Category;
+import com.poly.entity.Item;
+import com.poly.service.CategoryService;
+import com.poly.service.CategoryServiceImpl;
+import com.poly.service.ItemService;
 
 @Controller
 public class indexController {

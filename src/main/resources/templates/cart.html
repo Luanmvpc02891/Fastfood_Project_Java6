@@ -10,29 +10,33 @@
 	<title>Cart</title>
 
 	<!-- favicon -->
-	<link rel="shortcut icon" type="image/png" href="assets/img/favicon.png">
-	<!-- google font -->
-	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
-	<!-- fontawesome -->
-	<link rel="stylesheet" href="assets/css/all.min.css">
-	<!-- bootstrap -->
-	<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
-	<!-- owl carousel -->
-	<link rel="stylesheet" href="assets/css/owl.carousel.css">
-	<!-- magnific popup -->
-	<link rel="stylesheet" href="assets/css/magnific-popup.css">
-	<!-- animate css -->
-	<link rel="stylesheet" href="assets/css/animate.css">
-	<!-- mean menu css -->
-	<link rel="stylesheet" href="assets/css/meanmenu.min.css">
-	<!-- main style -->
-	<link rel="stylesheet" href="assets/css/main.css">
-	<!-- responsive -->
-	<link rel="stylesheet" href="assets/css/responsive.css">
+    <link rel="shortcut icon" type="image/png" th:href="@{/assets/img/favicon.png}">
+    <!-- google font -->
+	
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
+    <!-- fontawesome -->
+    <link rel="stylesheet" th:href="@{/assets/css/all.min.css}">
+    <!-- bootstrap -->
+    <link rel="stylesheet" th:href="@{/assets/bootstrap/css/bootstrap.min.css}">
+    <!-- owl carousel -->
+    <link rel="stylesheet" th:href="@{/assets/css/owl.carousel.css}">
+    <!-- magnific popup -->
+    <link rel="stylesheet" th:href="@{/assets/css/magnific-popup.css}">
+    <!-- animate css -->
+    <link rel="stylesheet" th:href="@{/assets/css/animate.css}">
+    <!-- mean menu css -->
+    <link rel="stylesheet" th:href="@{/assets/css/meanmenu.min.css}">
+    <!-- main style -->
+    <link rel="stylesheet" th:href="@{/assets/css/main.css}">
+    <!-- responsive -->
+    <link rel="stylesheet" th:href="@{/assets/css/responsive.css}">
+	<script th:src="@{https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js}"></script>
 
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 </head>
-<body>
+<body ng-app="shopping-cart-app" ng-controller="shopping-cart-ctrl">
 	
 	<!--PreLoader-->
     <div class="loader">
@@ -71,7 +75,7 @@
 			<div class="row">
 				<div class="col-lg-8 offset-lg-2 text-center">
 					<div class="breadcrumb-text">
-						<p>Fresh and Organic</p>
+						<p>Fast Foods</p>
 						<h1>Cart</h1>
 					</div>
 				</div>
@@ -89,7 +93,7 @@
 						<table class="cart-table">
 							<thead class="cart-table-head">
 								<tr class="table-head-row">
-									<th><input type="checkbox" id="checkAll"></th>
+									<th><input type="checkbox" ng-model="cart.selectAll" ng-click="selectAllItems()" id="checkAll"></th>
 									<th class="product-image">Product Image</th>
 									<th class="product-name">Name</th>
 									<th class="product-price">Price</th>
@@ -99,17 +103,20 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr class="table-body-row">
-									<td class="product-total"><input type="checkbox" class="checkbox"></td>
-									<td class="product-image"><img src="assets/img/products/product-img-1.jpg" alt=""></td>
-									<td class="product-name">Strawberry</td>
-									<td class="product-price">$85</td>
-									<td class="product-quantity"><input type="number" placeholder="0"></td>
-									<td class="product-total">1</td>
-									<td class="product-remove"><a href="#"><i class="far fa-window-close"></i></a></td>
+								<tr class="table-body-row" ng-repeat="item in cart.items">
+									<td class="product-total"><input type="checkbox" ng-model="item.selected" class="checkbox"></td>
+									<td class="product-image"> <img ng-src="/images/{{item.item.image}}" alt="Product Image"></td>
+									<td class="product-name">{{item.item.name}}</td>
+									<td class="product-price">{{item.item.price| number: 0}} vnđ</td>
+									<td class="product-quantity"><input ng-change="updateCartItemQuantity(item)"  ng-model="item.quantity" type="number" min="1"></td>
+									<td class="product-total">{{item.quantity*item.item.price | number: 0}} vnđ</td>
+									<td class="product-remove"><a class="boxed-btn" ng-click="cart.removeFromCart(item.item.itemId)"><i class="far fa-window-close"></i></a></td>
 								</tr>
 							</tbody>
 						</table>
+						<div class="cart-buttons"style="float: right;">
+							<a class="boxed-btn" ng-hidden="itemCount = 2" ng-click="removeSelectedItems()">Xóa</a>
+						</div>
 					</div>
 				</div>
 				<div class="col-lg-4">
@@ -124,33 +131,16 @@
 							<tbody>
 								<tr class="total-data">
 									<td><strong>Subtotal: </strong></td>
-									<td>$500</td>
-								</tr>
-								<tr class="total-data">
-									<td><strong>Shipping: </strong></td>
-									<td>$45</td>
-								</tr>
-								<tr class="total-data">
-									<td><strong>Total: </strong></td>
-									<td>$545</td>
+									<td> {{ cart.totalAmount | number:0 }} vnđ</td>
 								</tr>
 							</tbody>
 						</table>
 						<div class="cart-buttons">
-							<a href="cart.html" class="boxed-btn">Update Cart</a>
-							<a href="checkout.html" class="boxed-btn black">Check Out</a>
+							<a href="/checkout" class="boxed-btn black">Check Out</a>
 						</div>
 					</div>
 
-					<div class="coupon-section">
-						<h3>Apply Coupon</h3>
-						<div class="coupon-form-wrap">
-							<form action="index.html">
-								<p><input type="text" placeholder="Coupon"></p>
-								<p><input type="submit" value="Apply"></p>
-							</form>
-						</div>
-					</div>
+				
 				</div>
 			</div>
 		</div>
@@ -186,41 +176,27 @@
 	<!-- end logo carousel -->
 
 	  <div th:include="/layout/footer.html"></div>
-	<script>
-    // Lấy ra checkbox chứa ID "checkAll"
-    var checkAll = document.getElementById('checkAll');
-
-    // Lấy ra tất cả các checkbox có class là "checkbox"
-    var checkboxes = document.getElementsByClassName('checkbox');
-
-    // Gán sự kiện onclick cho checkbox "checkAll"
-    checkAll.onclick = function() {
-        // Duyệt qua tất cả các checkbox và thay đổi trạng thái checked của chúng
-        for (var i = 0; i < checkboxes.length; i++) {
-            checkboxes[i].checked = checkAll.checked;
-        }
-    };
-</script>
-	<!-- jquery -->
-	<script src="assets/js/jquery-1.11.3.min.js"></script>
-	<!-- bootstrap -->
-	<script src="assets/bootstrap/js/bootstrap.min.js"></script>
-	<!-- count down -->
-	<script src="assets/js/jquery.countdown.js"></script>
-	<!-- isotope -->
-	<script src="assets/js/jquery.isotope-3.0.6.min.js"></script>
-	<!-- waypoints -->
-	<script src="assets/js/waypoints.js"></script>
-	<!-- owl carousel -->
-	<script src="assets/js/owl.carousel.min.js"></script>
-	<!-- magnific popup -->
-	<script src="assets/js/jquery.magnific-popup.min.js"></script>
-	<!-- mean menu -->
-	<script src="assets/js/jquery.meanmenu.min.js"></script>
-	<!-- sticker js -->
-	<script src="assets/js/sticker.js"></script>
-	<!-- main js -->
-	<script src="assets/js/main.js"></script>
-
+	  
+    <!-- jquery -->
+    <script th:src="@{/assets/js/jquery-1.11.3.min.js}"></script>
+    <!-- bootstrap -->
+    <script th:src="@{/assets/bootstrap/js/bootstrap.min.js}"></script>
+    <!-- count down -->
+    <script th:src="@{/assets/js/jquery.countdown.js}"></script>
+    <!-- isotope -->
+    <script th:src="@{/assets/js/jquery.isotope-3.0.6.min.js}"></script>
+    <!-- waypoints -->
+    <script th:src="@{/assets/js/waypoints.js}"></script>
+    <!-- owl carousel -->
+    <script th:src="@{/assets/js/owl.carousel.min.js}"></script>
+    <!-- magnific popup -->
+    <script th:src="@{/assets/js/jquery.magnific-popup.min.js}"></script>
+    <!-- mean menu -->
+    <script th:src="@{/assets/js/jquery.meanmenu.min.js}"></script>
+    <!-- sticker js -->
+    <script th:src="@{/assets/js/sticker.js}"></script>
+    <!-- main js -->
+    <script th:src="@{/assets/js/main.js}"></script>
+	<script src="assets/js/shopping-cart-app.js"></script>
 </body>
 </html>

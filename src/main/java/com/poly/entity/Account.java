@@ -46,13 +46,13 @@ public class Account implements Serializable {
     @Column(name = "image")
     private String image;
 
-    @ManyToOne
-    @JoinColumn(name = "address_city")
-    private AddressCity addressCity;
+	@ManyToOne
+	@JoinColumn(name = "address_city")
+	private AddressCity addressCity;
 
-    @ManyToOne
-    @JoinColumn(name = "address_district")
-    private AddressDistrict addressDistrict;
+	@ManyToOne
+	@JoinColumn(name = "address_district")
+	private AddressDistrict addressDistrict;
 
     @Column(name = "active")
     private boolean active;

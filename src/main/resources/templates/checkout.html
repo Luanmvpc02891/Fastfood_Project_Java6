@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="Responsive Bootstrap4 Shop Template, Created by Imran Hossain from https://imransdesign.com/">
+	<meta name="description"
+		content="Responsive Bootstrap4 Shop Template, Created by Imran Hossain from https://imransdesign.com/">
 
 	<!-- title -->
 	<title>Check Out</title>
@@ -30,18 +32,22 @@
 	<link rel="stylesheet" href="assets/css/main.css">
 	<!-- responsive -->
 	<link rel="stylesheet" href="assets/css/responsive.css">
+	<script th:src="@{https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js}"></script>
 
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 </head>
-<body>
-	
+
+<body ng-app="check-out-app" ng-controller="check-out-ctrl">
+
 	<!--PreLoader-->
-    <div class="loader">
-        <div class="loader-inner">
-            <div class="circle"></div>
-        </div>
-    </div>
-    <!--PreLoader Ends-->
-	
+	<div class="loader">
+		<div class="loader-inner">
+			<div class="circle"></div>
+		</div>
+	</div>
+	<!--PreLoader Ends-->
+
 	<!-- header -->
 	<div th:include="/layout/nav.html"></div>
 	<!-- end header -->
@@ -64,15 +70,15 @@
 		</div>
 	</div>
 	<!-- end search arewa -->
-	
+
 	<!-- breadcrumb-section -->
 	<div class="breadcrumb-section breadcrumb-bg">
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-8 offset-lg-2 text-center">
 					<div class="breadcrumb-text">
-						<p>Fresh and Organic</p>
-						<h1>Check Out Product</h1>
+						<p>Fast Foods</p>
+						<h1>Thanh toán đơn hàng</h1>
 					</div>
 				</div>
 			</div>
@@ -91,30 +97,42 @@
 						    <div class="card-header" id="headingOne">
 						      <h5 class="mb-0">
 						        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-						          Billing Address
+						          Thông tin giao hàng
 						        </button>
 						      </h5>
 						    </div>
 
-						    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-						      <div class="card-body">
+						    <div class="card-body">
 						        <div class="billing-address-form">
-						        	<form action="index.html">
-						        		<p><input type="text" placeholder="Name"></p>
-						        		<p><input type="email" placeholder="Email"></p>
-						        		<p><input type="text" placeholder="Address"></p>
-						        		<p><input type="tel" placeholder="Phone"></p>
-						        		<p><textarea name="bill" id="bill" cols="30" rows="10" placeholder="Say Something"></textarea></p>
-						        	</form>
-						        </div>
+						        	<p><input class="form-select" type="text" placeholder="Tên khác hàng" ng-model="user.fullName"></p>
+						        	<p><input class="form-select" type="text" placeholder="Số điện thoại" ng-model="user.phoneNumber"></p>
+						        <div>
+						        <div ng-show="showSelects">
+    								<p>
+								        <select ng-model="selectedCity" class="form-select" aria-label="Select a city">
+								            <option class="form-select" ng-repeat="c in citys" ng-value="c">{{ c.name }}</option>
+								        </select>
+								    </p>
+								    <p>
+								        <select ng-model="selectedDistrict" class="form-select" aria-label="Select a district">
+								            <option class="form-select" ng-repeat="d in districts" ng-value="d">{{ d.name }}</option>
+								        </select>
+								    </p>
+								    <button class="btn-select" ng-click="updateCityAndDistrict()">Lưu</button> <button class="btn-select" ng-click="toggleSelects()">Update</button>
+								</div>
+								<div ng-hide="showSelects">
+									<p><input class="form-select" type="text" placeholder="Địa chỉ nhận hàng" ng-model="user.addressCity.name + ' - ' + user.addressDistrict.name" readonly></p>
+								    <button class="btn-select" ng-click="toggleSelects()">Chỉnh sửa</button>
+								</div>
 						      </div>
 						    </div>
+						  </div>
 						  </div>
 						  <div class="card single-accordion">
 						    <div class="card-header" id="headingTwo">
 						      <h5 class="mb-0">
 						        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-						          Shipping Address
+						          Phương thức thanh toán
 						        </button>
 						      </h5>
 						    </div>
@@ -126,11 +144,11 @@
 						      </div>
 						    </div>
 						  </div>
-						  <div class="card single-accordion">
+						  <!-- <div class="card single-accordion">
 						    <div class="card-header" id="headingThree">
 						      <h5 class="mb-0">
 						        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-						          Card Details
+Card Details
 						        </button>
 						      </h5>
 						    </div>
@@ -141,7 +159,7 @@
 						        </div>
 						      </div>
 						    </div>
-						  </div>
+						  </div> -->
 						</div>
 
 					</div>
@@ -153,43 +171,35 @@
 							<thead>
 								<tr>
 									<th>Your order Details</th>
-									<th>Price</th>
+									<th>Price(VND)</th>
 								</tr>
 							</thead>
 							<tbody class="order-details-body">
 								<tr>
-									<td>Product</td>
-									<td>Total</td>
+									<td><strong>Product</strong></td>
+									<td><strong>Total</strong></td>
 								</tr>
-								<tr>
-									<td>Strawberry</td>
-									<td>$85.00</td>
-								</tr>
-								<tr>
-									<td>Berry</td>
-									<td>$70.00</td>
-								</tr>
-								<tr>
-									<td>Lemon</td>
-									<td>$35.00</td>
+								<tr ng-repeat="item in cart.items">
+									<td>{{item.item.name}}</td>
+									<td>{{item.quantity*item.item.price | number: 0}}</td>
 								</tr>
 							</tbody>
 							<tbody class="checkout-details">
 								<tr>
-									<td>Subtotal</td>
-									<td>$190</td>
+									<td><strong>Subtotal</strong></td>
+									<td>{{ cart.totalAmount | number:0 }}</td>
 								</tr>
 								<tr>
-									<td>Shipping</td>
-									<td>$50</td>
+									<td>Phí vận chuyển</td>
+									<td>{{ship.data.total}}</td>
 								</tr>
 								<tr>
 									<td>Total</td>
-									<td>$240</td>
+									<td>{{ cart.totalAmount | number:0 }} vnđ</td>
 								</tr>
 							</tbody>
 						</table>
-						<a href="#" class="boxed-btn">Place Order</a>
+						<a ng-click="invoices()" class="boxed-btn">Place Order</a>
 					</div>
 				</div>
 			</div>
@@ -225,8 +235,8 @@
 	</div>
 	<!-- end logo carousel -->
 
-  <div th:include="/layout/footer.html"></div>
-	
+	<div th:include="/layout/footer.html"></div>
+
 	<!-- jquery -->
 	<script src="assets/js/jquery-1.11.3.min.js"></script>
 	<!-- bootstrap -->
@@ -247,6 +257,7 @@
 	<script src="assets/js/sticker.js"></script>
 	<!-- main js -->
 	<script src="assets/js/main.js"></script>
-
+	<script src="assets/js/check-out-app.js"></script>
 </body>
+
 </html>

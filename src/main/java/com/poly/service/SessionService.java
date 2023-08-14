@@ -5,8 +5,6 @@ import org.springframework.stereotype.Service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-
-
 @Service
 public class SessionService {
 	@Autowired
