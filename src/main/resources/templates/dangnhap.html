@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+	<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- Coding by CodingLab | www.codinglabweb.com-->
 <head>
@@ -20,28 +20,25 @@
 		<div class="form login">
 			<div class="form-content">
 				<header>Login</header>
-				<form th:action="@{/login}" th:object="${account}" method="POST">
+				<form th:action="@{/processinglogin}"  method="POST">
 					
 					<div class="field input-field">
 						<input type="text" name="username" placeholder="Username" class="input">
 					</div>
-					<div class="alert alert-danger"
-						th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
-						
 					
 					<div class="field input-field">
 						<input type="password" name="password" placeholder="Password"
 							class="password"> <i class='bx bx-hide eye-icon'></i>
 					</div>
-					<div class="alert alert-danger"
-						th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
-
+					<div class="alert alert-danger">
+						<i class = "pull-left text-danger" th:text="${message}"></i>
+					</div>
 					<div class="form-link">
 						<a href="#" class="forgot-pass">Forgot password?</a>
 					</div>
-
+					
 					<div class="field button-field">
-						<button>Login</button>
+						<button type="submit">Login</button>
 					</div>
 				</form>
 
@@ -60,22 +57,22 @@
 				</a>
 			</div>
 
+			
 			<div class="media-options">
-				<a href="#" class="field google"> <img src="images/google.png"
+				<a href="/oauth2/authorization/google" class="field google"> <img src="images/google.png"
 					alt="" class="google-img"> <span>Login with Google</span>
 				</a>
 			</div>
-
+			
+			<div class="fb-login-button" data-width="480" data-size="" data-button-type="" data-layout="" data-auto-logout-link="false" data-use-continue-as="false"></div>
 		</div>
 
 		<!-- Signup Form -->
-
-		
-
-	
 	</section>
 
 	<!-- JavaScript -->
+	
 	<script src="js/script.js"></script>
+	
 </body>
 </html>

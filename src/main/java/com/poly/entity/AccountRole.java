@@ -1,29 +1,27 @@
 package com.poly.entity;
 
 import java.io.Serializable;
-import java.util.Date;
+
 import jakarta.persistence.*;
 
 import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "Orders")
-public class Order implements Serializable {
+@Table(name = "AccountRoles")
+public class AccountRole implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_id")
-    private int orderId;
+    @Column(name = "accountroles_id")
+    private int accountRolesId;
 
     @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;
 
-    @Column(name = "order_date")
-    private Date orderDate;
-
-    @Column(name = "total_price")
-    private double totalPrice;
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Roles role;
 
     // Getters and Setters
 }

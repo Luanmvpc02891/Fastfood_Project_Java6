@@ -1,4 +1,6 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" 
+xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <!-- header -->
 	<div class="top-header-area" id="sticker">
 		<div class="container">
@@ -24,7 +26,7 @@
 								</li>
 								<li><a th:href="@{/about}">About</a></li>
 								<li><a href="#">Pages</a>
-									<ul class="sub-menu">
+									<ul class="sub-menu" >
 										<li><a th:href="@{/404}">404 page</a></li>
 										<li><a th:href="@{/about}">About</a></li>
 										<li><a th:href="@{/cart}">Cart</a></li>
@@ -32,8 +34,10 @@
 										<li><a th:href="@{/contact}">Contact</a></li>
 										<li><a th:href="@{/news}">News</a></li>
 										<li><a th:href="@{/shop}">Shop</a></li>
+										
 									</ul>
 								</li>
+								
 								<li><a th:href="@{/news}">News</a>
 									<ul class="sub-menu">
 										<li><a th:href="@{/news}">News</a></li>
@@ -49,6 +53,7 @@
 										<li><a href="@{/cart}">Cart</a></li>
 									</ul>
 								</li>
+								<li class="sub-menu" sec:authorize="hasRole('[Admin]')"><a th:href="@{/admin}">Admin</a></li>
 								<li>
 									<div class="header-icons">
 										<a class="shopping-cart" th:href="@{/cart}"><i class="fas fa-shopping-cart"></i></a>

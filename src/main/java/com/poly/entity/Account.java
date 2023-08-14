@@ -1,67 +1,65 @@
 package com.poly.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
+
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Data
 @Entity
 @Table(name = "Accounts")
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
 public class Account implements Serializable {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "account_id")
-	private int accountId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "account_id")
+    private int accountId;
 
-	@Column(name = "username")
-	private String username;
+//	@NotBlank(message = "{NotBlank.user.username}")
+    @Column(name = "username" , nullable=false)
+    private String username;
 
-	@NotBlank(message = "{NotBlank.account.password}")
-	@Column(name = "pass_work")
-	private String password;
+//	@NotBlank(message = "{NotBlank.user.password}")
+    @Column(name = "pass_work" , nullable = false)
+    private String password;
 
-	@Column(name = "full_name")
-	private String fullName;
-	
-	@NotBlank(message = "{NotBlank.account.email}")
-	@Email(message = "{Email.account.email}")
-	@Column(name = "email")
-	private String email;
+    @Column(name = "full_name")
+    private String fullName;
 
-	@Column(name = "phone_number")
-	private int phoneNumber;
+    @Column(name = "email")
+    private String email;
 
-	@Column(name = "image")
-	private String image;
+    @Column(name = "phone_number")
+    private int phoneNumber;
 
-	@Column(name = "address")
-	private String address;
+    @Column(name = "image")
+    private String image;
 
-	@ManyToOne
-	@JoinColumn(name = "roles")
-	private Role role;
+    @ManyToOne
+    @JoinColumn(name = "address_city")
+    private AddressCity addressCity;
 
-	@Column(name = "active")
-	private boolean active;
+    @ManyToOne
+    @JoinColumn(name = "address_district")
+    private AddressDistrict addressDistrict;
 
-	// Getters and Setters
+    @Column(name = "active")
+    private boolean active;
+    
+    @JsonIgnore
+	@OneToMany(mappedBy = "account", fetch = FetchType.EAGER)
+	List<AccountRole> authorities;
+
+    // Getters and Setters
 }

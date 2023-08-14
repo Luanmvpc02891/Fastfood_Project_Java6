@@ -9,15 +9,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.poly.entity.Account;
 import com.poly.repository.UserRepository;
 import com.poly.service.SessionService;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 
 
 
@@ -28,82 +26,93 @@ public class indexController {
 	@Autowired
 	SessionService session;
 
-	@GetMapping("/index")
+	@RequestMapping("/index")
 	public String index(Model model) {
 		return "index";
 	}
 	
 	
-	@GetMapping("/cart")
-	public String cart(Model model) {
-		return "cart";
-	}
 	
-	@GetMapping("/checkout")
+	
+	@RequestMapping("/checkout")
 	public String checkout(Model model) {
 		return "checkout";
 	}
 	
-	@GetMapping("/contact")
+	@RequestMapping("/contact")
 	public String contact(Model model) {
 		return "contact";
 	}
 	
-	@GetMapping("/about")
+	@RequestMapping("/about")
 	public String about(Model model) {
 		return "about";
 	}
 	
-	@GetMapping("/news")
+	@RequestMapping("/news")
 	public String news(Model model) {
 		return "news";
 	}
 	
-	@GetMapping("/single-news")
+	@RequestMapping("/single-news")
 	public String singlenews(Model model) {
 		return "single-news";
 	}
 	
-	@GetMapping("/single-product")
+	@RequestMapping("/single-product")
 	public String singleproduct(Model model) {
 		return "single-product";
 	}
 	
-	@GetMapping("/profile")
+	@RequestMapping("/profile")
 	public String indexAdmin(Model model) {
 		return "admin/profile";
 	}
 	
-	@GetMapping("/login")
+	@RequestMapping("/auth/dangnhap/form")
 	public String login(Model model) {
 		model.addAttribute("account", new Account());
-		return "Login";
+		return "/auth/dangnhap";
+	}
+	
+	@RequestMapping(value = "/auth/dangnhap/error")
+	public String loginFail(Model model) {
+		model.addAttribute("message", "Sai tên đăng nhập hoặc mật khẩu");
+		System.out.println("Error");
+		return "forward:/auth/dangnhap/form";
 	}
 
-	@PostMapping("/login")
-	public String processLoginForm(@Valid @ModelAttribute("account") Account account, BindingResult result, Model model,
-			@RequestParam("username") String username, @RequestParam("password") String password,
-			HttpServletRequest request, HttpServletResponse response) {
-
-		
-		account = dao.findByUsername(username);
-
-		if (account != null && account.getPassword().equals(password)) {
-			if (account.isActive()) {
-				session.set("userSession", account);
-				return "redirect:/index";
-			} 
-		}
-
-		
-		if (result.hasErrors()) {
-			model.addAttribute("messages", "Đăng nhập thất bại");
-			return "login";
-		}
-		
-		
-		return "login";
+	
+	@RequestMapping("/auth/dangnhap/success")
+	public String loginProcessing(Model model) {
+		System.out.println("Login Local");
+		return "redirect:/index";
 	}
+	@RequestMapping("/admin")
+	public String adminPage(Model model) {
+		model.addAttribute("account", new Account());
+		return "admin/index2";
+	}
+	
+	@RequestMapping("/rest/products")
+	public String cartProducts(Model model) {
+		model.addAttribute("account", new Account());
+		return "/cart";
+	}
+	
+	@RequestMapping("/cart")
+	public String cart(Model model) {
+		model.addAttribute("account", new Account());
+		return "/cart";
+	}
+	
+	@RequestMapping("/auth/dangnhap/denied")
+	public String denied(Model model) {
+		System.out.println("không có quyền truy cập");
+		model.addAttribute("message","không có quyền truy cập");
+		return "redirect:/index";
+	}
+	
 	
 
 }
