@@ -13,10 +13,6 @@ app.controller("check-out-ctrl", function ($scope, $http, $window) {
 
     $scope.showSelects = false;
 
-
-    // API VN-Pay
-
-
     $scope.load_citys = function () {
         var url = `/client/checkout/city`;
         $http.get(url).then(resp => {
@@ -71,10 +67,6 @@ app.controller("check-out-ctrl", function ($scope, $http, $window) {
         });
     }
 
-
-
-
-
     $scope.toggleSelects = function () {
         $scope.showSelects = !$scope.showSelects;
     };
@@ -96,8 +88,8 @@ app.controller("check-out-ctrl", function ($scope, $http, $window) {
 
         loadCartItems() {
             var accountId = 1; // Thay thế bằng cách lấy accountId từ người dùng sau khi đăng nhập
+            
             var url = `/rest/products/cart-items/${accountId}`;
-
             $http.get(url)
                 .then(response => {
                     $scope.cart.itemCount = response.data.length; // Cập nhật số lượng sản phẩm
@@ -129,7 +121,7 @@ app.controller("check-out-ctrl", function ($scope, $http, $window) {
         	"insurance_value": 70000,
         	"coupon": null,
         	"from_district_id": 1572,
-        	"to_district_id": 1575,
+        	"to_district_id": 1572,
         	"to_ward_code": null,
         	"height": 15,
         	"length": 15,
@@ -140,7 +132,7 @@ app.controller("check-out-ctrl", function ($scope, $http, $window) {
     	$http.post('https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee', body, { headers: header })
         	.then(response => {
             	$scope.ship = response.data;
-            	console.log($scope.ship);
+            	console.log($scope.user.addressDistrict.addressDistrictId);
         	})
         	.catch(error => {
             	console.error(error);
@@ -148,19 +140,62 @@ app.controller("check-out-ctrl", function ($scope, $http, $window) {
 		};
 
         // Tính hóa đơn
-    $scope.invoices = function(accountId){
-		var invoice = {
-			shipfee : $scope.ship,
-			totalAmount : $scope.total,
-			paymentMethod : 1
-		}
-		$http.post('/client/checkout/check' + 6, invoices)
+    $scope.dataCheckout = {};
+    $scope.invoices = function(){
+        var checkoutData = {
+            // shipfee2 : ($scope.ship.data.total),
+            totalAmount : parseFloat ($scope.cart.totalAmount)
+        };
+        var selectedMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+            if (selectedMethod === "method1") {
+                $http.post('/client/checkout/add-invoice/methodCOD', checkoutData)
+                .then(function (response) {
+                    $scope.alertSuccess("Đã đặt hàng!!!")
+                    console.log($scope.ship.data.total);
+                }).catch(function (error) {
+                        console.error('Error updating user:', error);
+                    });
+        } else if (selectedMethod === "method2") {
+            $http.post('/client/checkout/add-invoice/methodBanking', checkoutData)
 		.then(function (response) {
 			console.log('Oke');
 		}).catch(function (error) {
                 console.error('Error updating user:', error);
             });
+        }
+		
 	};
+    $scope.alertInfo = function (message) {
+        Toastify({
+            text: message,
+            duration: 1000,
+            newWindow: true,
+            gravity: "top",
+            position: "center",
+            stopOnFocus: true,
+            style: {
+                background: "#rgb(255, 165, 0)",
+                color: "white",
+            },
+            onClick: function () { }
+        }).showToast();
+    };
+    
+    $scope.alertSuccess = function (message) {
+        Toastify({
+            text: message,
+            duration: 1000,
+            newWindow: true,
+            gravity: "top",
+            position: "right",
+            stopOnFocus: true,
+            style: {
+                background: "#34c240",
+                color: "white",
+            },
+            onClick: function () { }
+        }).showToast();
+    };
     $scope.cart.loadCartItems();
     $scope.loadCategories();
     $scope.load_user();

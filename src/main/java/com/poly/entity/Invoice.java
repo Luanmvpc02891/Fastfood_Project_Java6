@@ -44,6 +44,5 @@ public class Invoice implements Serializable {
 
 	@Column(name = "status")
 	private boolean status;
-
 	// Getters and Setters
 }

@@ -17,4 +17,9 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     OrdersDao orderDao;
 
+    @Override
+    public Order findById(Integer orderId) {
+        return orderDao.findById(orderId).orElse(null);
+    }
+
 }

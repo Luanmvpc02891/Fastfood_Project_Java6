@@ -52,25 +52,6 @@
 	<div th:include="/layout/nav.html"></div>
 	<!-- end header -->
 
-	<!-- search area -->
-	<div class="search-area">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-12">
-					<span class="close-btn"><i class="fas fa-window-close"></i></span>
-					<div class="search-bar">
-						<div class="search-bar-tablecell">
-							<h3>Search For:</h3>
-							<input type="text" placeholder="Keywords">
-							<button type="submit">Search <i class="fas fa-search"></i></button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- end search arewa -->
-
 	<!-- breadcrumb-section -->
 	<div class="breadcrumb-section breadcrumb-bg">
 		<div class="container">
@@ -90,7 +71,7 @@
 	<div class="checkout-section mt-150 mb-150">
 		<div class="container">
 			<div class="row">
-				<div class="col-lg-8">
+				<div class="col-lg-7">
 					<div class="checkout-accordion-wrap">
 						<div class="accordion" id="accordionExample">
 						  <div class="card single-accordion">
@@ -104,9 +85,12 @@
 
 						    <div class="card-body">
 						        <div class="billing-address-form">
+									<p>Họ và tên:</p>
 						        	<p><input class="form-select" type="text" placeholder="Tên khác hàng" ng-model="user.fullName"></p>
+									<p>Số điện thoại</p>
 						        	<p><input class="form-select" type="text" placeholder="Số điện thoại" ng-model="user.phoneNumber"></p>
 						        <div>
+									<p>Địa chỉ:</p>
 						        <div ng-show="showSelects">
     								<p>
 								        <select ng-model="selectedCity" class="form-select" aria-label="Select a city">
@@ -115,14 +99,23 @@
 								    </p>
 								    <p>
 								        <select ng-model="selectedDistrict" class="form-select" aria-label="Select a district">
-								            <option class="form-select" ng-repeat="d in districts" ng-value="d">{{ d.name }}</option>
+								            <option class="form-select" ng-repeat="d in districts" ng-value="d">{{ d.name }} </option>
 								        </select>
 								    </p>
-								    <button class="btn-select" ng-click="updateCityAndDistrict()">Lưu</button> <button class="btn-select" ng-click="toggleSelects()">Update</button>
+								    <button class="btn-select" ng-click="updateCityAndDistrict()" style="font-family: 'Poppins', sans-serif; background-color: #28a745; color: #fff;">
+										Lưu
+									</button>
+									 <button class="btn-select" ng-click="toggleSelects()" style="font-family: 'Poppins', sans-serif; background-color: #dc3545; color: #fff;">
+										Hủy
+									</button>
 								</div>
 								<div ng-hide="showSelects">
-									<p><input class="form-select" type="text" placeholder="Địa chỉ nhận hàng" ng-model="user.addressCity.name + ' - ' + user.addressDistrict.name" readonly></p>
-								    <button class="btn-select" ng-click="toggleSelects()">Chỉnh sửa</button>
+									<p style="width: 100%; border: 1px solid #ddd; padding: 15px; margin: 0; border-radius: 3px;">
+										{{user.addressCity.name}} - {{user.addressDistrict.name}}
+									</p>
+								    <button class="btn-select" ng-click="toggleSelects()" style="font-family: 'Poppins', sans-serif; background-color: #F28123; color: #fff; margin-top: 10px;">
+										Chỉnh sửa
+									</button>
 								</div>
 						      </div>
 						    </div>
@@ -144,62 +137,61 @@
 						      </div>
 						    </div>
 						  </div>
-						  <!-- <div class="card single-accordion">
-						    <div class="card-header" id="headingThree">
-						      <h5 class="mb-0">
-						        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-Card Details
-						        </button>
-						      </h5>
-						    </div>
-						    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
-						      <div class="card-body">
-						        <div class="card-details">
-						        	<p>Your card details goes here.</p>
-						        </div>
-						      </div>
-						    </div>
-						  </div> -->
+						  
 						</div>
 
 					</div>
 				</div>
 
-				<div class="col-lg-4">
+				<div class="col-lg-5">
 					<div class="order-details-wrap">
 						<table class="order-details">
 							<thead>
 								<tr>
-									<th>Your order Details</th>
+									<th>Sản phẩm</th>
+									<th>Số lượng</th>
 									<th>Price(VND)</th>
 								</tr>
 							</thead>
 							<tbody class="order-details-body">
-								<tr>
-									<td><strong>Product</strong></td>
-									<td><strong>Total</strong></td>
-								</tr>
 								<tr ng-repeat="item in cart.items">
 									<td>{{item.item.name}}</td>
+									<td>{{item.quantity}}</td>
 									<td>{{item.quantity*item.item.price | number: 0}}</td>
 								</tr>
-							</tbody>
-							<tbody class="checkout-details">
+								<tr ng-if="cart.items.length === 0">
+									<td colspan="3">Không có sản phẩm</td>
+								</tr>
+								<tr style="background-color: #efefef;padding: 18px; font-size: 15px; font-weight: 500;">
+									<td>Tổng hóa đơn</td>
+									<td></td><td>VNĐ</td>
+								</tr>
 								<tr>
-									<td><strong>Subtotal</strong></td>
+									<td><strong>Tạm tính</strong></td><td></td>
+									<td ng-bind="cart.totalAmount | number:0"></td>
+								</tr>
+								<tr>
+									<td><strong>Phí vận chuyển</strong></td><td></td>
+									<td ng-bind="ship.data.total"></td>
+								</tr>
+								<tr>
+									<td><strong>Total</strong></td><td></td>
 									<td>{{ cart.totalAmount | number:0 }}</td>
-								</tr>
-								<tr>
-									<td>Phí vận chuyển</td>
-									<td>{{ship.data.total}}</td>
-								</tr>
-								<tr>
-									<td>Total</td>
-									<td>{{ cart.totalAmount | number:0 }} vnđ</td>
 								</tr>
 							</tbody>
 						</table>
-						<a ng-click="invoices()" class="boxed-btn">Place Order</a>
+						<form id="paymentForm">
+							<label>
+								<input type="radio" name="paymentMethod" value="method1"> Thanh toán COD
+							</label>
+							<label>
+								<input type="radio" name="paymentMethod" value="method2" style="margin-left: 30px;"> Thanh toán chuyển khoản
+							</label>
+							<div>
+								<a type="button" class="boxed-btn" ng-click="invoices()">Thanh toán</a>
+							</div>
+						</form>
+						
 					</div>
 				</div>
 			</div>
