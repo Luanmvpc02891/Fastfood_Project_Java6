@@ -17,8 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.poly.entity.Account;
 import com.poly.repository.UserRepository;
 import com.poly.service.SessionService;
-
-
+import com.poly.config.SecurityConfig;
 import com.poly.dao.CategoryDao;
 import com.poly.dao.ItemDao;
 import com.poly.entity.Category;
@@ -31,8 +30,11 @@ import com.poly.service.ItemService;
 public class indexController {
 	@Autowired
 	UserRepository dao;
+	
+	
 	@Autowired
-	SessionService session;
+	SecurityConfig secConfig;
+	
 
 	@RequestMapping("/index")
 	public String index(Model model) {
@@ -94,6 +96,7 @@ public class indexController {
 	@RequestMapping("/auth/dangnhap/success")
 	public String loginProcessing(Model model) {
 		System.out.println("Login Local");
+		model.addAttribute("account", new Account());
 		return "redirect:/index";
 	}
 	@RequestMapping("/admin")

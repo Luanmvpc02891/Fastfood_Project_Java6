@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +37,10 @@ import org.springframework.web.servlet.handler.UserRoleAuthorizationInterceptor;
 
 import com.poly.entity.Account;
 import com.poly.entity.AccountRole;
-import com.poly.entity.Roles;
+import com.poly.entity.Role;
 import com.poly.repository.AccountRepository;
 import com.poly.repository.RoleRepository;
+import com.poly.service.SessionService;
 
 
 @Configuration
@@ -51,6 +53,10 @@ public class SecurityConfig {
     
     @Autowired
     RoleRepository roleDAO;
+    
+    @Autowired
+    SessionService session;
+   
 
     @Bean
     BCryptPasswordEncoder getPasswordEncoder() {
@@ -65,6 +71,7 @@ public class SecurityConfig {
             public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
             	Account account = accountDAO.findByUsername(username) != null ? accountDAO.findByUsername(username) : null; 	
+            	 
                 	if(account == null) {
                 		throw new UsernameNotFoundException("User not found");
                 	}
@@ -72,8 +79,15 @@ public class SecurityConfig {
                     List<String> userRole2 = account.getAuthorities().stream()
                             .map(au -> String.valueOf(au.getRole().getRoleName())) // Chuyển đổi thành số nguyên
                             .collect(Collectors.toList());
-                    System.out.println(userRole1);
-                    System.out.println(userRole2);
+                  
+                    
+                    
+                  
+                    System.out.println(account.getAccountId());
+                    //session.set("account", account.getAccountId());
+                    
+               
+            		
                     GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + userRole2);
                     return new User(account.getUsername(), getPasswordEncoder().encode(account.getPassword()), Collections.singletonList(authority));
                 }
@@ -92,8 +106,8 @@ public class SecurityConfig {
 				"/login/oauth2/code/google","/oauth2/authorization/facebook","/login/oauth2/code/facebook")
 				.authorizeHttpRequests(authorize -> authorize
 						.requestMatchers(new AntPathRequestMatcher("/admin/**")).hasRole("[Admin]")
-						.requestMatchers(new AntPathRequestMatcher("/rest/products/**")).hasAnyRole("[User]", "[Admin]")
-						.requestMatchers(new AntPathRequestMatcher("/cart/**")).hasAnyRole("[User]", "[Admin]")
+						.requestMatchers(new AntPathRequestMatcher("/rest/products/**")).hasAnyRole("[User]", "[Admin]", "[Admin, User]")
+						.requestMatchers(new AntPathRequestMatcher("/cart/**")).hasAnyRole("[User]", "[Admin]", "[Admin, User]")
 						.requestMatchers(
 								new AntPathRequestMatcher("/dangnhap/**"),
 								new AntPathRequestMatcher("/index/**")

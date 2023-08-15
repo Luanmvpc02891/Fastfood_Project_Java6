@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "DiscountCodes")
+@Table(name = "discount_codes")
 public class DiscountCode implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,4 +29,5 @@ public class DiscountCode implements Serializable {
     private Date endDate;
 
     // Getters and Setters
+    
 }

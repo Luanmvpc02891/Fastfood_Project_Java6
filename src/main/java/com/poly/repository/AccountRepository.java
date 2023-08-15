@@ -10,6 +10,8 @@ import com.poly.entity.Account;
 
 public interface AccountRepository extends JpaRepository<Account, Integer> {
 	Account findByUsername(String username);
-	Account findByAccountId(String username);
+	Account findById(int account_id);
+
+	
 }
 
