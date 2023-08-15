@@ -118,7 +118,7 @@ public class CheckoutRestController {
 	@PostMapping("add-invoice/methodCOD")
 	public ResponseEntity<String> addInvoice(@RequestBody Map<String, Object> checkoutData) {
 		// Tìm kiếm thông tin người dùng
-		// double shipFee = shipfee;
+		int shipFee = (Integer) checkoutData.get("shipfee2");
 		int totalAmount = (Integer) (checkoutData.get("totalAmount"));
 
 		Account account = udao.findByAccountId(1);
@@ -130,10 +130,10 @@ public class CheckoutRestController {
 		invoice.setAccount(account);
 		// Cập nhật thông tin khác cho hóa đơn
 		invoice.setInvoiceDate(new Date());
-		// invoice.setShipfee(shipFee);
+		invoice.setShipfee(shipFee);
 		invoice.setTotalAmount(totalAmount);
 		invoice.setPaymentMethod(1);
-		// invoice.setStatus(true);
+		invoice.setStatus(true);
 
 		// Lưu hóa đơn vào cơ sở dữ liệu
 		invoiceRepository.save(invoice);
@@ -154,7 +154,7 @@ public class CheckoutRestController {
 	@PostMapping("add-invoice/methodBanking")
 	public ResponseEntity<String> addInvoiceBanking(@RequestBody Map<String, Object> checkoutData) {
 		// Tìm kiếm thông tin người dùng
-		// Double shipFee = (Double) checkoutData.get("shipFee2");
+		int shipFee = (Integer) checkoutData.get("shipfee2");
 		int totalAmount = (Integer) (checkoutData.get("totalAmount"));
 
 		Account account = udao.findByAccountId(6);
@@ -166,7 +166,7 @@ public class CheckoutRestController {
 		invoice.setAccount(account);
 		// Cập nhật thông tin khác cho hóa đơn
 		invoice.setInvoiceDate(new Date());
-		// invoice.setShipfee(shipFee);
+		invoice.setShipfee(shipFee);
 		invoice.setTotalAmount(totalAmount);
 		invoice.setPaymentMethod(2);
 		// invoice.setStatus(true);

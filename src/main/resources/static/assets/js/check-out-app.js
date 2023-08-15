@@ -88,7 +88,7 @@ app.controller("check-out-ctrl", function ($scope, $http, $window) {
 
         loadCartItems() {
             var accountId = 1; // Thay thế bằng cách lấy accountId từ người dùng sau khi đăng nhập
-            
+
             var url = `/rest/products/cart-items/${accountId}`;
             $http.get(url)
                 .then(response => {
@@ -110,61 +110,82 @@ app.controller("check-out-ctrl", function ($scope, $http, $window) {
 
     }
     $scope.ship = [];
-	$scope.shipfee = function() {
-		
-    	var header = {
-        	"token": "d6f64767-329b-11ee-af43-6ead57e9219a",
-        	"shop_id": "4421897"
-    	};
-    	var body = {
-        	"service_id": 53320,
-        	"insurance_value": 70000,
-        	"coupon": null,
-        	"from_district_id": 1572,
-        	"to_district_id": 1572,
-        	"to_ward_code": null,
-        	"height": 15,
-        	"length": 15,
-        	"weight": 1000,
-        	"width": 15
-    	};
-		
-    	$http.post('https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee', body, { headers: header })
-        	.then(response => {
-            	$scope.ship = response.data;
-            	console.log($scope.user.addressDistrict.addressDistrictId);
-        	})
-        	.catch(error => {
-            	console.error(error);
-        	});
-		};
+    $scope.shipfee = function () {
 
-        // Tính hóa đơn
-    $scope.dataCheckout = {};
-    $scope.invoices = function(){
-        var checkoutData = {
-            // shipfee2 : ($scope.ship.data.total),
-            totalAmount : parseFloat ($scope.cart.totalAmount)
+        var header = {
+            "token": "d6f64767-329b-11ee-af43-6ead57e9219a",
+            "shop_id": "4421897"
         };
-        var selectedMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
-            if (selectedMethod === "method1") {
+        var body = {
+            "service_id": 53320,
+            "insurance_value": 70000,
+            "coupon": null,
+            "from_district_id": 1572,
+            "to_district_id": 1572,
+            "to_ward_code": null,
+            "height": 15,
+            "length": 15,
+            "weight": 1000,
+            "width": 15
+        };
+
+        $http.post('https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee', body, { headers: header })
+            .then(response => {
+                $scope.ship = response.data;
+                console.log($scope.user.addressDistrict.addressDistrictId);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    };
+
+    // Tính hóa đơn
+    $scope.dataCheckout = {};
+    $scope.invoices = function () {
+        var selectedMethod = document.querySelector('input[name="paymentMethod"]:checked');
+
+        if (selectedMethod) {
+            var checkoutData = {
+                shipfee2: parseInt($scope.ship.data.total),
+                totalAmount: parseFloat($scope.cart.totalAmount)
+            };
+
+            if (selectedMethod.value === "method1") {
                 $http.post('/client/checkout/add-invoice/methodCOD', checkoutData)
-                .then(function (response) {
-                    $scope.alertSuccess("Đã đặt hàng!!!")
-                    console.log($scope.ship.data.total);
-                }).catch(function (error) {
+                    .then(function (response) {
+                        $scope.alertSuccess("Đã đặt hàng!!!");
+                        console.log($scope.ship.data.total);
+                        $scope.cart.loadCartItems();
+                        $scope.loadCategories();
+                        $scope.load_user();
+                        $scope.load_citys();
+                        $scope.load_districts();
+                        $scope.shipfee();
+                    })
+                    .catch(function (error) {
                         console.error('Error updating user:', error);
                     });
-        } else if (selectedMethod === "method2") {
-            $http.post('/client/checkout/add-invoice/methodBanking', checkoutData)
-		.then(function (response) {
-			console.log('Oke');
-		}).catch(function (error) {
-                console.error('Error updating user:', error);
-            });
+            } else if (selectedMethod.value === "method2") {
+                $http.post('/client/checkout/add-invoice/methodBanking', checkoutData)
+                    .then(function (response) {
+                        $scope.alertSuccess("Đã đặt hàng!!!");
+                        console.log('Oke');
+                        $scope.cart.loadCartItems();
+                        $scope.loadCategories();
+                        $scope.load_user();
+                        $scope.load_citys();
+                        $scope.load_districts();
+                        $scope.shipfee();
+                    })
+                    .catch(function (error) {
+                        console.error('Error updating user:', error);
+                    });
+            }
+        } else {
+            $scope.alertError("Vui lòng chọn phương thức thanh toán.");
         }
-		
-	};
+    };
+
     $scope.alertInfo = function (message) {
         Toastify({
             text: message,
@@ -180,7 +201,7 @@ app.controller("check-out-ctrl", function ($scope, $http, $window) {
             onClick: function () { }
         }).showToast();
     };
-    
+
     $scope.alertSuccess = function (message) {
         Toastify({
             text: message,
@@ -196,10 +217,27 @@ app.controller("check-out-ctrl", function ($scope, $http, $window) {
             onClick: function () { }
         }).showToast();
     };
+    $scope.alertError = function (message) {
+        Toastify({
+            text: message,
+            duration: 1000,
+            newWindow: true,
+            gravity: "center",
+            position: "center",
+            stopOnFocus: true,
+            style: {
+                background: "#dc3545",
+                color: "white",
+            },
+            onClick: function () { }
+        }).showToast();
+    };
     $scope.cart.loadCartItems();
     $scope.loadCategories();
     $scope.load_user();
     $scope.load_citys();
     $scope.load_districts();
     $scope.shipfee();
+
+   
 });
