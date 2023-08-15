@@ -36,14 +36,6 @@ public class shopController {
 
 	@GetMapping("/shop/{itemId}")
 	public String detal(@PathVariable int itemId, Model model) {
-		// Item item = dao.findById(itemId);
-		// model.addAttribute("items", item);
-		// // Lấy danh sách sản phẩm cùng loại trừ sản phẩm đang hiển thị
-
-		// List<Item> relatedProducts =
-		// itemService.getRelateditemsExcludingCurrent(item.getCategory().getCategoryId(),
-		// itemId);
-		// model.addAttribute("itemss", relatedProducts);
 		return "single-product";
 	}
 }

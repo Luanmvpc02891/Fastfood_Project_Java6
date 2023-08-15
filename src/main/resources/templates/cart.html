@@ -111,6 +111,10 @@
 									<td class="product-quantity"><input ng-change="updateCartItemQuantity(item)"  ng-model="item.quantity" type="number" min="1"></td>
 									<td class="product-total">{{item.quantity*item.item.price | number: 0}} vnđ</td>
 									<td class="product-remove"><a class="boxed-btn" ng-click="cart.removeFromCart(item.item.itemId)"><i class="far fa-window-close"></i></a></td>
+									<tr >
+										<td style="border: none;" ng-if="cart.items.length === 0">Không có sản phẩm</td>
+									</tr>
+
 								</tr>
 							</tbody>
 						</table>

@@ -16,4 +16,7 @@ public interface OrderItemDao extends JpaRepository<OrderItem, Integer> {
     OrderItem findByOrderAndItem(Order order, Item item);
 
     int countByOrderAccountAndItem(Account account, Item item);
+
+    List<OrderItem> findByOrder(Order order);
+
 }
