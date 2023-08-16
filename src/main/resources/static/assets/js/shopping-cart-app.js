@@ -36,10 +36,7 @@ app.controller("shopping-cart-ctrl", function ($scope, $http) {
 
        
         loadCartItems() {
-            var accountId = 1; // Thay thế bằng cách lấy accountId từ người dùng sau khi đăng nhập
-            var url = `/rest/products/cart-items/${accountId}`;
-
-            $http.get(url)
+            $http.get('/rest/products/cart-items')
                 .then(response => {
                     $scope.cart.itemCount = response.data.length; // Cập nhật số lượng sản phẩm
                     this.items = response.data;
@@ -49,6 +46,7 @@ app.controller("shopping-cart-ctrl", function ($scope, $http) {
                     console.error(error);
                 });
         },
+        
         removeFromCart(itemId) {
             var accountId = 1; // Thay thế bằng cách lấy accountId từ người dùng sau khi đăng nhập
             var url = `/rest/products/remove-from-cart/${itemId}/${accountId}`;

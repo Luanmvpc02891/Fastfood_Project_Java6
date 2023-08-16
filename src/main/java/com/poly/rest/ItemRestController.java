@@ -32,6 +32,8 @@ import com.poly.service.ItemService;
 import com.poly.service.OrderService;
 import com.poly.service.SessionService;
 
+import jakarta.servlet.http.HttpSession;
+
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/rest/products")
@@ -65,8 +67,10 @@ public class ItemRestController {
 		return itemService.findById(itemId);
 	}
 
-	@GetMapping("/cart-items/{accountId}")
-	public List<OrderItem> getCartItems(@PathVariable("accountId") Integer accountId) {
+	@GetMapping("/cart-items")
+	public List<OrderItem> getCartItems(HttpSession session) {
+		Integer accountId = (Integer) session.getAttribute("accountId");
+
 		// Lấy danh sách sản phẩm trong giỏ hàng dựa trên accountId
 		List<OrderItem> cartItems = orderItemDao.findByOrder_Account_AccountId(accountId);
 		return cartItems;
